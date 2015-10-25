@@ -1,25 +1,31 @@
 <?php
 
+namespace Jepi\Fw\Libraries;
+
 /**
- * DirectoryManager.php
+ * FileManager.php
  *
  * @package     JepiFW
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
-class DirectoryManager implements DirectoryManagerInterface
-{
+class FileManager {
+
+    public function __construct() {
+        
+    }
+
     /**
      * Recursive function that returns all directories inside a base directory.
      *
      * @param string $baseDir
      * @return array
      */
-    public function expandDirectories($baseDir)
-    {
+    public function expandDirectories($baseDir) {
         $directories = array();
         foreach (scandir($baseDir) as $file) {
-            if ($file == '.' || $file == '..') continue;
+            if ($file == '.' || $file == '..')
+                continue;
             $dir = $baseDir . DS . $file;
             if (is_dir($dir)) {
                 $directories [] = $dir;
@@ -35,17 +41,18 @@ class DirectoryManager implements DirectoryManagerInterface
      * @param $baseDir
      * @return array
      */
-    public function listAllFilesInDirectory($baseDir)
-    {
+    public function listAllFilesInDirectory($baseDir) {
         $files = array();
         foreach (scandir($baseDir) as $file) {
-            if ($file == '.' || $file == '..') continue;
+            if ($file == '.' || $file == '..')
+                continue;
             $path = $baseDir . DS . $file;
-            if (is_file($path)){
+            if (is_file($path)) {
                 $files[] = $path;
             }
         }
 
         return $files;
     }
+
 }

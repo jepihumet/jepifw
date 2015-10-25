@@ -1,5 +1,7 @@
 <?php
 
+namespace Jepi\Fw\Config;
+
 /**
  * ConfigAbstract.php
  *

@@ -1,0 +1,21 @@
+{
+    "name": "vendor/jepi-fw",
+    "description": "Description of project JepiFw.",
+    "authors": [
+        {
+            "name": "Jepi Humet Alsius",
+            "email": "jepihumet@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Jepi\\Fw\\": [
+                "JepiFw/System"
+            ],
+            "MyApp\\": [
+                "JepiFw/App"
+            ]
+        }
+    }
+}

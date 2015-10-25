@@ -1,5 +1,7 @@
 <?php
 
+namespace MyApp\Controllers;
+
 /**
  * HomeController.php
  *
@@ -7,7 +9,7 @@
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
-class HomeController
+class HomeController extends \Jepi\Fw\Controller\Controller
 {
     public function index(){
         echo "Hello World";
