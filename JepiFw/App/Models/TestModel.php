@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 /**
  * TestModel.php
  *
@@ -7,11 +9,12 @@
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
-class TestModel
-{
+class TestModel {
+
     public $string;
 
-    public function __construct(){
+    public function __construct() {
         $this->string = "MVC + PHP = Awesome!";
     }
+
 }

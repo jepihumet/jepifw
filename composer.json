@@ -13,7 +13,7 @@
             "Jepi\\Fw\\": [
                 "JepiFw/System"
             ],
-            "MyApp\\": [
+            "App\\": [
                 "JepiFw/App"
             ]
         }

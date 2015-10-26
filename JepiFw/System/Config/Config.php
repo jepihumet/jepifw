@@ -15,8 +15,17 @@ class Config extends ConfigAbstract {
         $this->config = array();
     }
 
-    public function get($key) {
-        return key_exists($key, $this->config) ? $this->config[$key] : null;
+    public function get($section, $key) {
+        $sectionData = $this->getSection($section);
+        return key_exists($key, $sectionData) ? $sectionData[$key] : null;
+    }
+
+    public function getSection($section) {
+        if (key_exists($section, $this->config)) {
+            return $this->config[$section];
+        } else {
+            throw new Exception("Config section ($section) not found.");
+        }
     }
 
     public function set($key, $value) {
@@ -24,7 +33,7 @@ class Config extends ConfigAbstract {
     }
 
     public function loadConfigFile($path) {
-        $configFromFile = parse_ini_file($path);
+        $configFromFile = parse_ini_file($path, true);
         $this->config = array_merge($this->config, $configFromFile);
     }
 
