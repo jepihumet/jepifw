@@ -6,6 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'MyApp\\' => array($baseDir . '/JepiFw/App'),
     'Jepi\\Fw\\' => array($baseDir . '/JepiFw/System'),
+    'App\\' => array($baseDir . '/JepiFw/App'),
 );

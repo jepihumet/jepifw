@@ -28,8 +28,8 @@ class Config extends ConfigAbstract {
         }
     }
 
-    public function set($key, $value) {
-        $this->config[$key] = $value;
+    public function set($section, $key, $value) {
+        $this->config[$section][$key] = $value;
     }
 
     public function loadConfigFile($path) {

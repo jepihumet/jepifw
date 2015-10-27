@@ -38,14 +38,21 @@ class FrontController implements FrontControllerInterface {
     protected $action = null;
     protected $params = array();
     protected $basePath = null;
+    private $appNamespace = "";
+    private $controllersNamespace = "";
+    private $modelsNamespace = "";
+    private $extensionsNamespace = "";
 
-    public function __construct(\Composer\Autoload\ClassLoader $autoload, array $options = array()) {
+    public function __construct(\Composer\Autoload\ClassLoader $autoload,
+            array $options = array()) {
         $this->initErrorManagement();
         $this->autoload = $autoload;
         $this->fileManager = new \Jepi\Fw\Libraries\FileManager();
         $this->config = new \Jepi\Fw\Config\Config();
 
         $this->loadConfigFiles();
+        $this->initNamespacesVars();
+
         if (empty($options)) {
             $this->parseUri();
         } else {
@@ -67,6 +74,15 @@ class FrontController implements FrontControllerInterface {
         });
     }
 
+    private function initNamespacesVars() {
+        $this->appNamespace = $this->config->get('Namespaces', 'App');
+        $this->controllersNamespace = $this->config->get('Namespaces',
+                'Controllers');
+        $this->modelsNamespace = $this->config->get('Namespaces', 'Models');
+        $this->extensionsNamespace = $this->config->get('Namespaces',
+                'Extensions');
+    }
+
     private function loadConfigFiles() {
         $configFiles = $this->fileManager->listAllFilesInDirectory(APP_ROOT . DS . 'config');
 
@@ -74,25 +90,21 @@ class FrontController implements FrontControllerInterface {
             $this->config->loadConfigFile($configFile);
         }
 
-        $routing = $this->config->get('Routing');
-        $this->basePath = $routing['basePath'];
+        $this->basePath = $this->config->get('Routing', 'SiteUrl');
     }
 
     public function parseUri() {
         $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), DS);
-        $path = preg_replace('/^[a-zA-Z0-9\/]/', '', $path);
-
-        $path = substr($path, strlen($this->basePath));
         @list($controller, $action, $params) = explode('/', $path, 3);
 
         if (isset($controller) && !is_null($controller) && ($controller != "")) {
             $this->setController($controller);
-        }else{
+        } else {
             $this->setController(SELF::DEFAULT_CONTROLLER);
         }
         if (isset($action) && !is_null($action) && ($action != "")) {
             $this->setAction($action);
-        }else{
+        } else {
             $this->setAction(SELF::DEFAULT_ACTION);
         }
         if (isset($params) && !is_null($params) && ($params != "")) {
@@ -101,7 +113,7 @@ class FrontController implements FrontControllerInterface {
     }
 
     public function setController($controller) {
-        $controller = '\\MyApp\\Controllers\\' . ucfirst(strtolower($controller)) . 'Controller';
+        $controller = $this->controllersNamespace . '\\' . ucfirst(strtolower($controller)) . 'Controller';
         if (!class_exists($controller)) {
             throw new \InvalidArgumentException("The action controller '$controller' has not been defined.");
         }
@@ -125,7 +137,8 @@ class FrontController implements FrontControllerInterface {
 
     public function run() {
         try {
-            call_user_func(array($this->controller, $this->action), $this->params);
+            call_user_func_array(array(new $this->controller, $this->action),
+                    $this->params);
         } catch (Exception $ex) {
             echo "Controller was not loaded";
         }
