@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Jepi\\Fw\\' => array($baseDir . '/JepiFw/System'),
-    'App\\' => array($baseDir . '/JepiFw/App'),
+    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+    'Jepi\\Fw\\' => array($baseDir . '/JepiFw/System', $baseDir . '/test/JepiFw/System'),
+    'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'App\\' => array($baseDir . '/JepiFw/App', $baseDir . '/test/JepiFw/App'),
 );
