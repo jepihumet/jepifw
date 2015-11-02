@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL); 
+ini_set("display_errors", 1); 
+
 /**
  * index.php
  *
@@ -16,5 +19,5 @@ define('SYSTEM_ROOT', FW_ROOT . DS . 'System');
 
 $loader = require 'vendor/autoload.php';
 
-$frontController = new Jepi\Fw\FrontController\FrontController($loader);
+$frontController = new \Jepi\Fw\FrontController\FrontController($loader);
 $frontController->run();
