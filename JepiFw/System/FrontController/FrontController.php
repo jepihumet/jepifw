@@ -84,10 +84,10 @@ class FrontController implements FrontControllerInterface {
     }
 
     private function loadConfigFiles() {
-        $configFiles = $this->fileManager->listAllFilesInDirectory(APP_ROOT . DS . 'config');
+        $configFiles = $this->fileManager->listAllFilesInDirectory(APP_ROOT . DS . 'Config');
 
         foreach ($configFiles as $configFile) {
-            $this->config->loadConfigFile($configFile);
+            $this->config->loadFile($configFile);
         }
 
         $this->basePath = $this->config->get('Routing', 'SiteUrl');
