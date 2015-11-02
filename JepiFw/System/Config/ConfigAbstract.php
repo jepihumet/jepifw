@@ -9,17 +9,54 @@ namespace Jepi\Fw\Config;
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
-abstract class ConfigAbstract {
+abstract class ConfigAbstract implements ConfigInterface {
 
+    /**
+     *
+     * @var array<mixed>
+     */
     protected $config = array();
+    protected $noValue = false;
 
-    abstract public function get($section, $key);
+    /**
+     * 
+     * @param type $section
+     * @param type $key
+     * @return type
+     */
+    public function get($section, $key) {
+        $sectionData = $this->getSection($section);
+        return array_key_exists($key, $sectionData) ? $sectionData[$key] : $this->noValue;
+    }
 
-    abstract public function getSection($section);
+    /**
+     * 
+     * @param type $section
+     * @return type
+     * @throws Exception
+     */
+    public function getSection($section) {
+        if (array_key_exists($section, $this->config)) {
+            return $this->config[$section];
+        } else {
+            throw new Exception("Config section ($section) not found.");
+        }
+    }
 
-    abstract public function set($section, $key, $value);
+    /**
+     * 
+     * @param type $section
+     * @param type $key
+     * @param type $value
+     */
+    public function set($section, $key, $value) {
+        if (!array_key_exists($section, $this->config)) {
+            $this->config[$section] = array();
+        }
+        $this->config[$section][$key] = $value;
+    }
 
-    abstract public function loadConfigFile($path);
+    abstract public function loadFile($path);
 
-    abstract public function loadConfigArray($config);
+    abstract public function loadArray($config);
 }
