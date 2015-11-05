@@ -50,10 +50,18 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadArray()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $config = array(
+            "Routing" => array(
+                "a" => 1,
+                "b" => 2,
+                "c" => 3
+            )
         );
+        $this->object->loadArray($config);
+
+        $routing = $this->object->getSection('Routing');
+
+        $this->assertEquals($config['Routing'], $routing);
     }
 
     /**
