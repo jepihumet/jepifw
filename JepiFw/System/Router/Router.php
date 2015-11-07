@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Router.php
+ * RouterInterface.php
  *
  * @package     JepiFW
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
@@ -9,29 +10,45 @@
 
 namespace Jepi\Fw\Router;
 
+class Router implements RouterInterface{
 
-class Router implements RouterInterface
-{
     protected $controller;
     protected $action;
-    protected $parameters;
+    protected $params;
 
-    public function setController($controller)
-    {
-        // TODO: Implement setController() method.
+    /**
+     * @param string $controller
+     */
+    public function setController($controller) {
+        $controller = $this->controllersNamespace . '\\' . ucfirst(strtolower($controller)) . 'Controller';
+        if (!class_exists($controller)) {
+            throw new \InvalidArgumentException("The action controller '$controller' has not been defined.");
+        }
+        $this->controller = $controller;
     }
 
-    public function setAction($action)
-    {
-        // TODO: Implement setAction() method.
+    /**
+     * @param string $action
+     */
+    public function setAction($action) {
+        $reflector = new \ReflectionClass($this->controller);
+        if (!$reflector->hasMethod($action)) {
+            throw new \InvalidArgumentException("The controller action '$action' has been not defined.");
+        }
+        $this->action = $action;
     }
 
-    public function setParameters($parameters)
-    {
-        // TODO: Implement setParameters() method.
+    /**
+     * @param array $params
+     */
+    public function setParameters($params) {
+        $this->params = $params;
     }
 
-    public function parseRoutes()
+    /**
+     * @param string $route
+     */
+    public function parseRoutes($route)
     {
         // TODO: Implement parseRoutes() method.
     }
@@ -40,6 +57,5 @@ class Router implements RouterInterface
     {
         // TODO: Implement validateRequest() method.
     }
-
 
 }
