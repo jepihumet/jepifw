@@ -89,13 +89,12 @@ class Response implements ResponseInterface
 
     public function send()
     {
-        header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
         foreach($this->headers as $header){
             header($header, false, $this->statusCode);
         }
+        header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
 
         echo $this->content;
+        return $this->content;
     }
-
-
 }
