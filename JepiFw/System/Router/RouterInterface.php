@@ -11,11 +11,17 @@
 namespace Jepi\Fw\Router;
 
 
+use Jepi\Fw\Config\ConfigAbstract;
+use Jepi\Fw\IO\InputInterface;
+
 interface RouterInterface
 {
-    public function setController($controller);
-    public function setAction($action);
-    public function setParameters($parameters);
-    public function parseRoutes();
-    public function validateRequest();
+    /**
+     * @param ConfigAbstract $config
+     * @param string $controller
+     * @param string $action
+     * @param string $params
+     * @param InputInterface $inputData
+     */
+    public function __construct(ConfigAbstract $config, $controller, $action, $params, InputInterface $inputData);
 }
