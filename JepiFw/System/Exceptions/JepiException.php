@@ -10,7 +10,7 @@
 
 namespace Jepi\Fw\Exceptions;
 
-class JepiException extends Exception
+class JepiException extends \Exception
 {
     public function getProductionMessage()
     {
