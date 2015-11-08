@@ -9,8 +9,9 @@
 
 namespace Jepi\Fw\IO;
 
+use Jepi\Fw\Security\XssFilter;
 
-class Input implements InputInterface
+class Input extends XssFilter implements InputInterface
 {
 
     /**
@@ -20,82 +21,23 @@ class Input implements InputInterface
     /**
      * @var mixed
      */
-    private $notFoundDefaultValue;
+    private $unsetValue;
 
     /**
-     * @param $notFoundDefaultValue
+     * @param $dataArray
+     * @param $unsetValue
      */
-    public function __construct($notFoundDefaultValue){
-        $this->notFoundDefaultValue = $notFoundDefaultValue;
-
-        $inputJSON = file_get_contents('php://input');
-        $input= json_decode($inputJSON, TRUE);
-
-        $this->data = array(
-            "post" => $_POST,
-            "get" => $_GET,
-            "files" => $input
-        );
-    }
-
-    public function xssPreventFilter($data){
-        $trimmed = trim($data);
-        $stripped = strip_tags($trimmed);
-        $entities = htmlspecialchars($stripped);
-        $sanitized = filter_var($entities, FILTER_SANITIZE_SPECIAL_CHARS);
-        return $this->typedValue($sanitized);
-    }
-
-    private function typedValue($value){
-        $typedValue = $value;
-        if (is_int($value)){
-            $typedValue = (int)$value;
-        }else if (is_bool($value)){
-            $typedValue = (bool)$value;
-        }else if (is_float($value)){
-            $typedValue = (float)$value;
-        }else if (is_string($value)){
-            $typedValue = (string)$value;
-        }else if (is_long($value) || is_double($value)){
-            $typedValue = (double)$value;
-        }
-        return $typedValue;
-    }
-
-    private function getValue($globalVar, $key){
-        if (!array_key_exists($globalVar, $this->data)){
-            throw new Exception("Key '$globalVar' not found as an input array.");
-        }
-
-        $returnValue = $this->notFoundDefaultValue;
-        if (array_key_exists($key, $this->data[$globalVar])){
-            $returnValue = $this->data[$globalVar][$key];
-        }
-        return $returnValue;
-
+    public function __construct($dataArray, $unsetValue){
+        $this->unsetValue = $unsetValue;
+        $this->data = $dataArray;
     }
 
     public function get($key, $xssPrevent = true)
     {
-        $value = $this->getValue('get', $key);
-        if ($xssPrevent) {
-            $value = $this->xssPreventFilter($value);
+        $value = $this->unsetValue;
+        if (array_key_exists($key, $this->data)){
+            $value = $this->data[$key];
         }
-        return $value;
-    }
-
-    public function post($key, $xssPrevent = true)
-    {
-        $value = $this->getValue('post', $key);
-        if ($xssPrevent) {
-            $value = $this->xssPreventFilter($value);
-        }
-        return $value;
-    }
-
-    public function file($key, $xssPrevent = true)
-    {
-        $value = $this->getValue('files', $key);
         if ($xssPrevent) {
             $value = $this->xssPreventFilter($value);
         }
