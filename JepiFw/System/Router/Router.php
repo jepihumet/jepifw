@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Router.php
+ * RouterInterface.php
  *
  * @package     JepiFW
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
