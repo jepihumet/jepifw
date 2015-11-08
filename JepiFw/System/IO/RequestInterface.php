@@ -12,6 +12,14 @@ namespace Jepi\Fw\IO;
 
 interface RequestInterface
 {
+    /**
+     * @return mixed
+     */
     public function getRequest();
+
+    /**
+     * @param $key
+     * @return \stdClass
+     */
     public function getHeader($key);
 }
