@@ -11,13 +11,9 @@ namespace Jepi\Fw\Config;
  */
 class Config extends ConfigAbstract {
 
-    /**
-     * 
-     * @param string $noValue
-     */
-    public function __construct($noValue = false) {
+
+    public function __construct() {
         $this->config = array();
-        $this->noValue = $noValue;
     }
 
     /**
@@ -25,7 +21,7 @@ class Config extends ConfigAbstract {
      * @param string $path
      */
     public function loadFile($path) {
-        $configFromFile = parse_ini_file($path, true);
+        $configFromFile = parse_ini_file($path, true, INI_SCANNER_TYPED);
         $this->config = array_merge($this->config, $configFromFile);
     }
 
