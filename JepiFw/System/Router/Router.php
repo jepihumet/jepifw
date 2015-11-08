@@ -10,6 +10,7 @@
 
 namespace Jepi\Fw\Router;
 
+use Jepi\Fw\Exceptions\RouterException;
 use Jepi\Fw\Config\ConfigAbstract;
 use Jepi\Fw\IO\InputInterface;
 
@@ -67,7 +68,7 @@ class Router implements RouterInterface{
         $this->controller = $controllersNamespaces . '\\' . ucfirst(strtolower($this->controller));
 
         if (!class_exists($this->controller)) {
-            throw new \InvalidArgumentException("The controller '{$this->controller}' has not been defined.");
+            throw new RouterException("The controller '{$this->controller}' has not been defined.");
         }
     }
 
@@ -78,7 +79,7 @@ class Router implements RouterInterface{
 
         $reflector = new \ReflectionClass($this->controller);
         if (!$reflector->hasMethod($this->action)) {
-            throw new \InvalidArgumentException("The controller action '{$this->action}' has been not defined.");
+            throw new RouterException("The controller action '{$this->action}' has been not defined.");
         }
 
         //Prepare to setup the input parameters
@@ -102,10 +103,26 @@ class Router implements RouterInterface{
                 if ($reflectionParameter->isOptional()){
                     $value = $reflectionParameter->getDefaultValue();
                 }else{
-                    throw new RouterException("Parameter {$name} expected and not found on input data.");
+                    throw new RouterException("Parameter '{$name}'' expected and not found on input data.");
                 }
             }
             $this->parameters[$name] = $value;
         }
     }
+
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
 }
