@@ -11,15 +11,15 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Config
      */
-    protected $object;
+    public static $object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->object = new Config();
+        self::$object = new Config();
     }
 
     /**
@@ -33,39 +33,47 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Jepi\Fw\Config\Config::loadFile
-     * @todo   Implement testLoadFile().
      */
     public function testLoadFile()
     {
-        $this->object->loadFile(dirname(__FILE__) . '/config.ini');
+        self::$object->loadFile(dirname(__FILE__) . '/config.ini');
 
-        $config = $this->object->getData();
+        $config = self::$object->getData();
         $this->assertTrue(count($config) > 0);
         $this->assertTrue(array_key_exists('Routing',$config));
     }
 
     /**
      * @covers Jepi\Fw\Config\Config::loadArray
-     * @todo   Implement testLoadArray().
      */
     public function testLoadArray()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $config = array(
+            "Routing" => array(
+                "a" => 1,
+                "b" => 2,
+                "c" => 3
+            )
         );
+        self::$object->loadArray($config);
+
+        $routing = self::$object->getSection('Routing');
+
+        $this->assertEquals($config['Routing'], $routing);
+
+        return $config;
     }
 
     /**
      * @covers Jepi\Fw\Config\Config::getData
-     * @todo   Implement testGetData().
+     * @depends testLoadArray
+     * @param $config
      */
-    public function testGetData()
+    public function testGetData($config)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = self::$object->getData();
+
+        $this->assertEquals($config['Routing'], $data['Routing']);
     }
 
 }
