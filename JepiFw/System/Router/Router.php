@@ -10,52 +10,119 @@
 
 namespace Jepi\Fw\Router;
 
+use Jepi\Fw\Exceptions\RouterException;
+use Jepi\Fw\Config\ConfigAbstract;
+use Jepi\Fw\IO\InputInterface;
+
 class Router implements RouterInterface{
 
+    /**
+     * @var ConfigAbstract
+     */
+    protected $config;
+    /**
+     * @var string
+     */
     protected $controller;
+    /**
+     * @var string
+     */
     protected $action;
-    protected $params;
+    /**
+     * @var string
+     */
+    protected $uriParams;
+    /**
+     * @var InputInterface
+     */
+    protected $inputData;
+    /**
+     * @var array
+     */
+    protected $parameters;
+
 
     /**
+     * @param ConfigAbstract $config
      * @param string $controller
-     */
-    public function setController($controller) {
-        $controller = $this->controllersNamespace . '\\' . ucfirst(strtolower($controller)) . 'Controller';
-        if (!class_exists($controller)) {
-            throw new \InvalidArgumentException("The action controller '$controller' has not been defined.");
-        }
-        $this->controller = $controller;
-    }
-
-    /**
      * @param string $action
+     * @param string $params
+     * @param InputInterface $inputData
      */
-    public function setAction($action) {
-        $reflector = new \ReflectionClass($this->controller);
-        if (!$reflector->hasMethod($action)) {
-            throw new \InvalidArgumentException("The controller action '$action' has been not defined.");
-        }
+    public function __construct(ConfigAbstract $config, $controller, $action, $params, InputInterface $inputData){
+        $this->config = $config;
+        $this->controller = $controller;
         $this->action = $action;
+        $this->uriParams = $params;
+        $this->inputData = $inputData;
+
+        $this->checkController();
+        $this->checkAction();
     }
 
-    /**
-     * @param array $params
-     */
-    public function setParameters($params) {
-        $this->params = $params;
+    private function checkController() {
+        if (!isset($this->controller) || is_null($this->controller) || ($this->controller == "")) {
+            $this->controller = $this->config->get('Routing', 'DefaultController');
+        }
+        $controllersNamespaces = $this->config->get('Namespaces', 'Controllers');
+        $this->controller = $controllersNamespaces . '\\' . ucfirst(strtolower($this->controller));
+
+        if (!class_exists($this->controller)) {
+            throw new RouterException("The controller '{$this->controller}' has not been defined.");
+        }
     }
 
-    /**
-     * @param string $route
-     */
-    public function parseRoutes($route)
+    private function checkAction() {
+        if (!isset($this->action) || is_null($this->action) || ($this->action == "")) {
+            $this->action = $this->config->get('Routing', 'DefaultAction');
+        }
+
+        $reflector = new \ReflectionClass($this->controller);
+        if (!$reflector->hasMethod($this->action)) {
+            throw new RouterException("The controller action '{$this->action}' has been not defined.");
+        }
+
+        //Prepare to setup the input parameters
+        $reflectionMethod = $reflector->getMethod($this->action);
+        $this->setParameters($reflectionMethod);
+    }
+
+    private function setParameters(\ReflectionMethod $reflectionMethod) {
+        //if (isset($this->parameters) && !is_null($this->parameters) && ($this->parameters != "")) {
+        //    $extraParameters = explode(DIRECTORY_SEPARATOR, $this->parameters);
+        //}
+
+        $this->parameters = array();
+        //Get expecting parameters
+        $reflectionParameters = $reflectionMethod->getParameters();
+        $unsetValue = $this->config->get('Input', 'UnsetValue');
+        foreach($reflectionParameters as $reflectionParameter){
+            $name = $reflectionParameter->getName();
+            $value = $this->inputData->get($name);
+            if ($value == $unsetValue){
+                if ($reflectionParameter->isOptional()){
+                    $value = $reflectionParameter->getDefaultValue();
+                }else{
+                    throw new RouterException("Parameter '{$name}'' expected and not found on input data.");
+                }
+            }
+            $this->parameters[$name] = $value;
+        }
+    }
+
+    public function getController()
     {
-        // TODO: Implement parseRoutes() method.
+        return $this->controller;
     }
 
-    public function validateRequest()
+    public function getAction()
     {
-        // TODO: Implement validateRequest() method.
+        return $this->action;
+    }
+
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
 }

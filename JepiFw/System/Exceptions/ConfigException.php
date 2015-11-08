@@ -1,16 +1,16 @@
 <?php
 /**
- * InputInterface.php
+ * ConfigException.php
  *
  * @package     JepiFW
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
 
-namespace Jepi\Fw\IO;
+namespace Jepi\Fw\Exceptions;
 
 
-interface InputInterface
+class ConfigException extends JepiException
 {
-    public function get($key, $xssPrevent = true);
+
 }

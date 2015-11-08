@@ -10,17 +10,26 @@
 namespace Jepi\Fw\IO;
 
 
+use Jepi\Fw\Config\ConfigAbstract;
+use Jepi\Fw\Router\Router;
+use Jepi\Fw\Router\RouterInterface;
+
 class Request implements RequestInterface
 {
     /**
-     * @var InputInterface
+     * @var DataCollection
      */
-    protected $input;
+    protected $dataCollection;
 
     /**
-     * @var \Jepi\Fw\Router\RouterInterface
+     * @var RouterInterface
      */
     protected $router;
+
+    /**
+     * @var ConfigAbstract
+     */
+    protected $config;
 
     /**
      * @var string
@@ -30,7 +39,7 @@ class Request implements RequestInterface
     /**
      * @var mixed
      */
-    private $notFoundDefaultValue;
+    private $unsetValue;
 
     /**
      * @var RequestData
@@ -38,12 +47,13 @@ class Request implements RequestInterface
     private $requestData;
 
     /**
-     * @param $notFoundDefaultValue
+     * @param ConfigAbstract $config
      */
-    public function __construct($notFoundDefaultValue){
-        $this->notFoundDefaultValue = $notFoundDefaultValue;
-
+    public function __construct(ConfigAbstract $config){
+        $this->config = $config;
+        $this->unsetValue = $config->get('Input', 'UnsetValue');
         $this->requestData = new RequestData(null);
+        $this->dataCollection = new DataCollection($this->unsetValue);
     }
 
     /**
@@ -79,7 +89,38 @@ class Request implements RequestInterface
             }
         }
 
-        return $this->notFoundDefaultValue;
+        return $this->unsetValue;
     }
 
+    /**
+     * @return bool
+     */
+    public function validateRequest()
+    {
+        $method = $this->requestData->getMethod();
+
+        $input = null;
+        switch($method){
+            case 'GET':
+                $input = $this->dataCollection->get();
+                break;
+            case 'POST':
+                $input = $this->dataCollection->post();
+                break;
+            case 'PUT':
+                $input = $this->dataCollection->post();
+                break;
+            case 'DELETE':
+            case 'HEAD':
+            default:
+                $input = $this->dataCollection->get();
+        }
+
+        $path = trim(parse_url($this->requestData->getUri(), PHP_URL_PATH), DIRECTORY_SEPARATOR);
+        @list($controller, $action, $params) = explode('/', $path, 3);
+
+        $this->router = new Router($this->config, $controller, $action, $params, $input);
+
+        return true;
+    }
 }

@@ -10,7 +10,12 @@ class InputTest extends \PHPUnit_Framework_TestCase {
     /**
      * @var Input
      */
-    protected $object;
+    protected $getInput;
+    /**
+     * @var Input
+     */
+    protected $postInput;
+
     private $xssInjection = "<script>window.alert('hello world');</script>";
     private $xssInjectionFiltered = "window.alert(&#39;hello world&#39;);";
 
@@ -27,7 +32,8 @@ class InputTest extends \PHPUnit_Framework_TestCase {
         $_POST['attr2'] = 2;
         $_POST['attr3'] = 3;
         $_POST['xssInjection'] = $this->xssInjection;
-        $this->object = new Input(false);
+        $this->getInput = new Input($_GET, false);
+        $this->postInput = new Input($_POST, false);
     }
 
     /**
@@ -43,7 +49,7 @@ class InputTest extends \PHPUnit_Framework_TestCase {
      * @covers Jepi\Fw\IO\Input::xssPreventFilter
      */
     public function testXssPreventFilter() {
-        $filtered = $this->object->xssPreventFilter($this->xssInjection);
+        $filtered = $this->getInput->xssPreventFilter($this->xssInjection);
 
         $this->assertEquals($this->xssInjectionFiltered, $filtered);
     }
@@ -52,12 +58,12 @@ class InputTest extends \PHPUnit_Framework_TestCase {
      * @covers Jepi\Fw\IO\Input::get
      */
     public function testGet() {
-        $prop1 = $this->object->get('prop1');
-        $prop2 = $this->object->get('prop2');
-        $prop3 = $this->object->get('prop3');
-        $xssInjection = $this->object->get('xssInjection', false);
-        $xssInjectionFiltered = $this->object->get('xssInjection');
-        $nonExisting = $this->object->get('testNoGetParam');
+        $prop1 = $this->getInput->get('prop1');
+        $prop2 = $this->getInput->get('prop2');
+        $prop3 = $this->getInput->get('prop3');
+        $xssInjection = $this->getInput->get('xssInjection', false);
+        $xssInjectionFiltered = $this->getInput->get('xssInjection');
+        $nonExisting = $this->getInput->get('testNoGetParam');
 
         $this->assertEquals(1,$prop1);
         $this->assertEquals(2,$prop2);
@@ -71,12 +77,12 @@ class InputTest extends \PHPUnit_Framework_TestCase {
      * @covers Jepi\Fw\IO\Input::post
      */
     public function testPost() {
-        $prop1 = $this->object->post('attr1');
-        $prop2 = $this->object->post('attr2');
-        $prop3 = $this->object->post('attr3');
-        $xssInjection = $this->object->post('xssInjection', false);
-        $xssInjectionFiltered = $this->object->post('xssInjection');
-        $nonExisting = $this->object->post('testNoGetParam');
+        $prop1 = $this->postInput->get('attr1');
+        $prop2 = $this->postInput->get('attr2');
+        $prop3 = $this->postInput->get('attr3');
+        $xssInjection = $this->postInput->get('xssInjection', false);
+        $xssInjectionFiltered = $this->postInput->get('xssInjection');
+        $nonExisting = $this->postInput->get('testNoGetParam');
 
         $this->assertEquals(1,$prop1);
         $this->assertEquals(2,$prop2);

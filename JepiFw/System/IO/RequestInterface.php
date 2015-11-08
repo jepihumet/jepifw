@@ -22,4 +22,9 @@ interface RequestInterface
      * @return \stdClass
      */
     public function getHeader($key);
+
+    /**
+     * @return bool
+     */
+    public function validateRequest();
 }

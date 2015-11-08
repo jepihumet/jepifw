@@ -3,13 +3,13 @@
 namespace App\Controllers;
 
 /**
- * HomeController.php
+ * Home.php
  *
  * @package     JepiFW
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
-class HomeController extends \Jepi\Fw\Controller\Controller
+class Home extends \Jepi\Fw\Controller\Controller
 {
     public function index(){
         echo "Hello World";

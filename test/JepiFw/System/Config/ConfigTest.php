@@ -36,7 +36,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadFile()
     {
-        self::$object->loadFile(dirname(__FILE__) . '/config.ini');
+        self::$object->loadFile(dirname(__FILE__) . '/../../../../JepiFw/System/config.ini');
 
         $config = self::$object->getData();
         $this->assertTrue(count($config) > 0);
