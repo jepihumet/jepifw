@@ -13,13 +13,28 @@ namespace Jepi\Fw\IO;
 class Input implements InputInterface
 {
 
+    /**
+     * @var array
+     */
     protected $data;
-    protected $noInputFound;
+    /**
+     * @var mixed
+     */
+    private $notFoundDefaultValue;
 
-    public function __construct(){
+    /**
+     * @param $notFoundDefaultValue
+     */
+    public function __construct($notFoundDefaultValue){
+        $this->notFoundDefaultValue = $notFoundDefaultValue;
+
+        $inputJSON = file_get_contents('php://input');
+        $input= json_decode($inputJSON, TRUE);
+
         $this->data = array(
             "post" => $_POST,
-            "get" => $_GET
+            "get" => $_GET,
+            "files" => $input
         );
     }
 
@@ -27,8 +42,8 @@ class Input implements InputInterface
         $trimmed = trim($data);
         $stripped = strip_tags($trimmed);
         $entities = htmlspecialchars($stripped);
-
-        return $this->typedValue($entities);
+        $sanitized = filter_var($entities, FILTER_SANITIZE_SPECIAL_CHARS);
+        return $this->typedValue($sanitized);
     }
 
     private function typedValue($value){
@@ -48,18 +63,13 @@ class Input implements InputInterface
     }
 
     private function getValue($globalVar, $key){
-        $vars = array();
-        switch($globalVar){
-            case 'get':
-                $vars = $this->data['get'];
-                break;
-            case 'post':
-                $vars = $this->data['post'];
-                break;
+        if (!array_key_exists($globalVar, $this->data)){
+            throw new Exception("Key '$globalVar' not found as an input array.");
         }
-        $returnValue = $this->noInputFound;
-        if (array_key_exists($key, $vars)){
-            $returnValue = $vars[$key];
+
+        $returnValue = $this->notFoundDefaultValue;
+        if (array_key_exists($key, $this->data[$globalVar])){
+            $returnValue = $this->data[$globalVar][$key];
         }
         return $returnValue;
 
@@ -77,6 +87,15 @@ class Input implements InputInterface
     public function post($key, $xssPrevent = true)
     {
         $value = $this->getValue('post', $key);
+        if ($xssPrevent) {
+            $value = $this->xssPreventFilter($value);
+        }
+        return $value;
+    }
+
+    public function file($key, $xssPrevent = true)
+    {
+        $value = $this->getValue('files', $key);
         if ($xssPrevent) {
             $value = $this->xssPreventFilter($value);
         }
