@@ -12,10 +12,10 @@ namespace App\Controllers;
 class Home extends \Jepi\Fw\Controller\Controller
 {
     public function index(){
-        echo "Hello World";
+        return "Hello World";
     }
 
     public function myfunc(){
-        echo "my func is running";
+        return "my func is running";
     }
 }

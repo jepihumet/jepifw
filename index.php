@@ -1,8 +1,5 @@
 <?php
 
-error_reporting(E_ALL); 
-ini_set("display_errors", 1); 
-
 /**
  * index.php
  *
@@ -10,6 +7,10 @@ ini_set("display_errors", 1);
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
+
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', dirname(__FILE__));
 

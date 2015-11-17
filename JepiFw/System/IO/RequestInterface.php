@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RequestInterface.php
  *
@@ -9,9 +10,8 @@
 
 namespace Jepi\Fw\IO;
 
+interface RequestInterface {
 
-interface RequestInterface
-{
     /**
      * @return mixed
      */
@@ -24,7 +24,7 @@ interface RequestInterface
     public function getHeader($key);
 
     /**
-     * @return bool
+     * @return \Jepi\Fw\Router\RouterInterface
      */
     public function validateRequest();
 }

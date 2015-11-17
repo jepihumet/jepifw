@@ -14,33 +14,37 @@ use Jepi\Fw\Exceptions\RouterException;
 use Jepi\Fw\Config\ConfigAbstract;
 use Jepi\Fw\IO\InputInterface;
 
-class Router implements RouterInterface{
+class Router implements RouterInterface {
 
     /**
      * @var ConfigAbstract
      */
     protected $config;
+
     /**
      * @var string
      */
     protected $controller;
+
     /**
      * @var string
      */
     protected $action;
+
     /**
      * @var string
      */
     protected $uriParams;
+
     /**
      * @var InputInterface
      */
     protected $inputData;
+
     /**
      * @var array
      */
     protected $parameters;
-
 
     /**
      * @param ConfigAbstract $config
@@ -49,20 +53,27 @@ class Router implements RouterInterface{
      * @param string $params
      * @param InputInterface $inputData
      */
-    public function __construct(ConfigAbstract $config, $controller, $action, $params, InputInterface $inputData){
+    public function __construct(ConfigAbstract $config, $controller, $action,
+            $params, InputInterface $inputData) {
         $this->config = $config;
         $this->controller = $controller;
         $this->action = $action;
         $this->uriParams = $params;
         $this->inputData = $inputData;
-
+        
         $this->checkController();
         $this->checkAction();
     }
 
+    /**
+     * 
+     * @throws RouterException
+     */
     private function checkController() {
-        if (!isset($this->controller) || is_null($this->controller) || ($this->controller == "")) {
-            $this->controller = $this->config->get('Routing', 'DefaultController');
+        if (!isset($this->controller) || is_null($this->controller) || ($this->controller
+                == "")) {
+            $this->controller = $this->config->get('Routing',
+                    'DefaultController');
         }
         $controllersNamespaces = $this->config->get('Namespaces', 'Controllers');
         $this->controller = $controllersNamespaces . '\\' . ucfirst(strtolower($this->controller));
@@ -72,11 +83,14 @@ class Router implements RouterInterface{
         }
     }
 
+    /**
+     * 
+     * @throws RouterException
+     */
     private function checkAction() {
         if (!isset($this->action) || is_null($this->action) || ($this->action == "")) {
             $this->action = $this->config->get('Routing', 'DefaultAction');
         }
-        //var_dump($this->action);
 
         $reflector = new \ReflectionClass($this->controller);
         if (!$reflector->hasMethod($this->action)) {
@@ -88,6 +102,11 @@ class Router implements RouterInterface{
         $this->setParameters($reflectionMethod);
     }
 
+    /**
+     * 
+     * @param \ReflectionMethod $reflectionMethod
+     * @throws RouterException
+     */
     private function setParameters(\ReflectionMethod $reflectionMethod) {
         //if (isset($this->parameters) && !is_null($this->parameters) && ($this->parameters != "")) {
         //    $extraParameters = explode(DIRECTORY_SEPARATOR, $this->parameters);
@@ -97,32 +116,41 @@ class Router implements RouterInterface{
         //Get expecting parameters
         $reflectionParameters = $reflectionMethod->getParameters();
         $unsetValue = $this->config->get('Input', 'UnsetValue');
-        foreach($reflectionParameters as $reflectionParameter){
+        foreach ($reflectionParameters as $reflectionParameter) {
             $name = $reflectionParameter->getName();
             $value = $this->inputData->get($name);
-            if ($value == $unsetValue){
-                if ($reflectionParameter->isOptional()){
+            if ($value == $unsetValue) {
+                if ($reflectionParameter->isOptional()) {
                     $value = $reflectionParameter->getDefaultValue();
-                }else{
-                    throw new RouterException("Parameter '{$name}'' expected and not found on input data.");
+                } else {
+                    throw new RouterException("Parameter '{$name}' expected and not found on input data.");
                 }
             }
             $this->parameters[$name] = $value;
         }
     }
 
-    public function getController()
-    {
+    /**
+     * 
+     * @return string
+     */
+    public function getController() {
         return $this->controller;
     }
 
-    public function getAction()
-    {
+    /**
+     * 
+     * @return string
+     */
+    public function getAction() {
         return $this->action;
     }
 
-    public function getParameters()
-    {
+    /**
+     * 
+     * @return array
+     */
+    public function getParameters() {
         return $this->parameters;
     }
 

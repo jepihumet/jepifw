@@ -9,7 +9,7 @@ namespace App\Controllers;
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
-class Test extends \Jepi\Fw\Controller\Controller
+class Testme extends \Jepi\Fw\Controller\Controller
 {
 
     public function testMethod($param1, $param2){

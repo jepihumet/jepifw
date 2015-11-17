@@ -25,9 +25,21 @@ interface RouterInterface
      */
     public function __construct(ConfigAbstract $config, $controller, $action, $params, InputInterface $inputData);
 
+    /**
+     * 
+     * @return string
+     */
     public function getController();
 
+    /**
+     * 
+     * @return string
+     */
     public function getAction();
 
+    /**
+     * 
+     * @return string
+     */
     public function getParameters();
 }
