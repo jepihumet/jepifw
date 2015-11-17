@@ -76,6 +76,7 @@ class Router implements RouterInterface{
         if (!isset($this->action) || is_null($this->action) || ($this->action == "")) {
             $this->action = $this->config->get('Routing', 'DefaultAction');
         }
+        //var_dump($this->action);
 
         $reflector = new \ReflectionClass($this->controller);
         if (!$reflector->hasMethod($this->action)) {

@@ -11,11 +11,11 @@ namespace Jepi\Fw\IO;
  */
 class Response implements ResponseInterface
 {
-    protected $content;
-    protected $statusCode;
-    protected $statusText;
-    protected $version;
-    protected $headers;
+    protected $content = "";
+    protected $statusCode = 200;
+    protected $statusText = "";
+    protected $version = "1.1";
+    protected $headers = array();
 
     public static $statusTexts = array(
         100 => 'Continue',
@@ -83,7 +83,9 @@ class Response implements ResponseInterface
         $this->version = '1.1';
         $this->content = $content;
         $this->statusCode = $statusCode;
-        $this->statusText = Response::$statusTexts[$statusCode];
+        if (array_key_exists($statusCode,self::$statusTexts)){
+            $this->statusText = self::$statusTexts[$statusCode];
+        }
         $this->headers = $headers;
     }
 

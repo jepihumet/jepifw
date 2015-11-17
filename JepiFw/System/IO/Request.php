@@ -93,7 +93,7 @@ class Request implements RequestInterface
     }
 
     /**
-     * @return bool
+     * @return RouterInterface
      */
     public function validateRequest()
     {
@@ -119,8 +119,9 @@ class Request implements RequestInterface
         $path = trim(parse_url($this->requestData->getUri(), PHP_URL_PATH), DIRECTORY_SEPARATOR);
         @list($controller, $action, $params) = explode('/', $path, 3);
 
+        //var_dump(array($controller, $action, $params));
         $this->router = new Router($this->config, $controller, $action, $params, $input);
 
-        return true;
+        return $this->router;
     }
 }

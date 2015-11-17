@@ -22,7 +22,14 @@ class Config extends ConfigAbstract {
      */
     public function loadFile($path) {
         $configFromFile = parse_ini_file($path, true, INI_SCANNER_TYPED);
-        $this->config = array_merge($this->config, $configFromFile);
+        foreach($configFromFile as $key => $values){
+            if (!array_key_exists($key, $this->config)) {
+                $this->config[$key] = array();
+            }
+            foreach ($values as $key2 => $value) {
+                $this->config[$key][$key2] = $value;
+            }
+        }
     }
 
     /**
