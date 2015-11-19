@@ -56,11 +56,6 @@ class Router implements RouterInterface {
 
         @list($controller, $action, $params) = $this->parseUri($uri);
 
-        jlog("URI", $uri);
-        jlog("CONTROLLER", $controller);
-        jlog("ACTION", $action);
-        jlog("PARAMS", $params);
-
         $this->controller = $controller;
         $this->action = $action;
         $this->uriParams = $params;
@@ -75,15 +70,12 @@ class Router implements RouterInterface {
      * @return array
      */
     private function parseUri($uri){
-        jlog("URI", $uri);
-
         $path = trim(parse_url($uri, PHP_URL_PATH), DIRECTORY_SEPARATOR);
         if ($path[0] == '/'){
             $cleanPath = substr($path, 1);
         }else{
             $cleanPath = $path;
         }
-        jlog("PATH", $cleanPath);
         return explode('/', $cleanPath, 3);
     }
     /**
@@ -122,19 +114,12 @@ class Router implements RouterInterface {
         $this->setParameters($reflectionMethod);
     }
 
-    protected function uriDecode($uri){
-        $extraParameters = explode('/', $this->uriParams);
-
-        return;
-    }
     /**
      * 
      * @param \ReflectionMethod $reflectionMethod
      * @throws RouterException
      */
     private function setParameters(\ReflectionMethod $reflectionMethod) {
-        $extraParameters = $this->uriDecode($this->uriParams);
-
         $this->parameters = array();
         //Get expecting parameters
         $reflectionParameters = $reflectionMethod->getParameters();

@@ -98,17 +98,14 @@ class Request implements RequestInterface
     {
         $method = $this->requestData->getMethod();
 
-        $input = null;
         switch($method){
-            case 'GET':
-                $input = $this->dataCollection->get();
-                break;
             case 'POST':
                 $input = $this->dataCollection->post();
                 break;
             case 'PUT':
                 $input = $this->dataCollection->post();
                 break;
+            case 'GET':
             case 'DELETE':
             case 'HEAD':
             default:
