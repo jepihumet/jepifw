@@ -3,16 +3,18 @@
 namespace App\Controllers;
 
 /**
- * Test.php
+ * Demo.php
  *
  * @package     JepiFW
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
-class Testme extends \Jepi\Fw\Controller\Controller
+class Demo extends \Jepi\Fw\Controller\Controller
 {
-
-    public function testMethod($param1, $param2){
+    public function index(){
+        return "hola";
+    }
+    public function testMethod($param1 = 2, $param2){
         return "Param1 = $param1, Param2 = $param2";
     }
 }

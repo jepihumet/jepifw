@@ -12,5 +12,5 @@ namespace Jepi\Fw\Exceptions;
 
 class ConfigException extends JepiException
 {
-
+    protected $exceptionType = "Config Exception";
 }

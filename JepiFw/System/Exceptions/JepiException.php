@@ -12,6 +12,8 @@ namespace Jepi\Fw\Exceptions;
 
 class JepiException extends \Exception
 {
+    protected $exceptionType = "Exception";
+
     public function getProductionMessage()
     {
         $texts = \Jepi\Fw\IO\Response::$statusTexts;
@@ -29,4 +31,7 @@ class JepiException extends \Exception
         return $errorMsg;
     }
 
+    public function getExceptionType(){
+        return $this->exceptionType;
+    }
 }

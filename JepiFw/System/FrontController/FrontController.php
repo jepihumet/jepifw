@@ -5,6 +5,7 @@ namespace Jepi\Fw\FrontController;
 use Composer\Autoload\ClassLoader;
 use Jepi\Fw\Config\Config;
 use Jepi\Fw\Config\ConfigAbstract;
+use Jepi\Fw\Exceptions\JepiException;
 use Jepi\Fw\IO\Request;
 use Jepi\Fw\IO\RequestInterface;
 use Jepi\Fw\IO\Response;
@@ -47,16 +48,17 @@ class FrontController implements FrontControllerInterface {
     }
 
     private function initErrorManagement() {
-        set_exception_handler(function (\Exception $e) {
+        set_exception_handler(function (JepiException $e) {
             //Load Error View
             $trace = $e->getTraceAsString();
-            $traceChain = nl2br($trace);
+            $trace = nl2br($trace);
             $errorMsg = $e->getMessage();
+            $errorType = $e->getExceptionType();
 
-            $message = "<h1>$errorMsg</h1><p>$traceChain</p>";
+            $content = sprintf('<h2>Error %s: %s</h2><p>%s</p></br>%s', 'X', $errorType, $errorMsg, $trace);
 
             //Create Response and send it
-            $response = new Response($message, $e->getCode());
+            $response = new Response($content, $e->getCode());
             $response->send();
         });
     }

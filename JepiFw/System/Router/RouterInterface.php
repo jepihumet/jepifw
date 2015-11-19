@@ -18,12 +18,10 @@ interface RouterInterface
 {
     /**
      * @param ConfigAbstract $config
-     * @param string $controller
-     * @param string $action
-     * @param string $params
+     * @param $uri
      * @param InputInterface $inputData
      */
-    public function __construct(ConfigAbstract $config, $controller, $action, $params, InputInterface $inputData);
+    public function __construct(ConfigAbstract $config, $uri, InputInterface $inputData);
 
     /**
      * 

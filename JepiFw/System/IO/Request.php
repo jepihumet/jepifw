@@ -114,12 +114,10 @@ class Request implements RequestInterface
             default:
                 $input = $this->dataCollection->get();
         }
-        
-        $path = trim(parse_url($this->requestData->getUri(), PHP_URL_PATH), DIRECTORY_SEPARATOR);
-        @list($controller, $action, $params) = explode('/', $path, 3);
 
-        $this->router = new Router($this->config, $controller, $action, $params, $input);
-        
+        $uri = $this->requestData->getUri();
+        $this->router = new Router($this->config, $uri, $input);
+
         return $this->router;
     }
 

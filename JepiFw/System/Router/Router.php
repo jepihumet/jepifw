@@ -48,14 +48,19 @@ class Router implements RouterInterface {
 
     /**
      * @param ConfigAbstract $config
-     * @param string $controller
-     * @param string $action
-     * @param string $params
+     * @param string $uri
      * @param InputInterface $inputData
      */
-    public function __construct(ConfigAbstract $config, $controller, $action,
-            $params, InputInterface $inputData) {
+    public function __construct(ConfigAbstract $config, $uri, InputInterface $inputData) {
         $this->config = $config;
+
+        @list($controller, $action, $params) = $this->parseUri($uri);
+
+        jlog("URI", $uri);
+        jlog("CONTROLLER", $controller);
+        jlog("ACTION", $action);
+        jlog("PARAMS", $params);
+
         $this->controller = $controller;
         $this->action = $action;
         $this->uriParams = $params;
@@ -65,6 +70,22 @@ class Router implements RouterInterface {
         $this->checkAction();
     }
 
+    /**
+     * @param $uri
+     * @return array
+     */
+    private function parseUri($uri){
+        jlog("URI", $uri);
+
+        $path = trim(parse_url($uri, PHP_URL_PATH), DIRECTORY_SEPARATOR);
+        if ($path[0] == '/'){
+            $cleanPath = substr($path, 1);
+        }else{
+            $cleanPath = $path;
+        }
+        jlog("PATH", $cleanPath);
+        return explode('/', $cleanPath, 3);
+    }
     /**
      * 
      * @throws RouterException
@@ -91,7 +112,6 @@ class Router implements RouterInterface {
         if (!isset($this->action) || is_null($this->action) || ($this->action == "")) {
             $this->action = $this->config->get('Routing', 'DefaultAction');
         }
-
         $reflector = new \ReflectionClass($this->controller);
         if (!$reflector->hasMethod($this->action)) {
             throw new RouterException("The controller action '{$this->action}' has been not defined.");
@@ -102,15 +122,18 @@ class Router implements RouterInterface {
         $this->setParameters($reflectionMethod);
     }
 
+    protected function uriDecode($uri){
+        $extraParameters = explode('/', $this->uriParams);
+
+        return;
+    }
     /**
      * 
      * @param \ReflectionMethod $reflectionMethod
      * @throws RouterException
      */
     private function setParameters(\ReflectionMethod $reflectionMethod) {
-        //if (isset($this->parameters) && !is_null($this->parameters) && ($this->parameters != "")) {
-        //    $extraParameters = explode(DIRECTORY_SEPARATOR, $this->parameters);
-        //}
+        $extraParameters = $this->uriDecode($this->uriParams);
 
         $this->parameters = array();
         //Get expecting parameters
@@ -120,7 +143,7 @@ class Router implements RouterInterface {
             $name = $reflectionParameter->getName();
             $value = $this->inputData->get($name);
             if ($value == $unsetValue) {
-                if ($reflectionParameter->isOptional()) {
+                if ($reflectionParameter->isDefaultValueAvailable()) {
                     $value = $reflectionParameter->getDefaultValue();
                 } else {
                     throw new RouterException("Parameter '{$name}' expected and not found on input data.");

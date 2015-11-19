@@ -12,5 +12,5 @@ namespace Jepi\Fw\Exceptions;
 
 class RouterException extends JepiException
 {
-
+    protected $exceptionType = "Routing Exception";
 }

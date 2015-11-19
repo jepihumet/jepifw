@@ -76,6 +76,7 @@ class Response implements ResponseInterface
         508 => 'Loop Detected',                                               // RFC5842
         510 => 'Not Extended',                                                // RFC2774
         511 => 'Network Authentication Required',                             // RFC6585
+        612 => 'Unexpected error'
     );
 
     public function __construct($content, $statusCode = 200, $headers = array())
@@ -85,17 +86,19 @@ class Response implements ResponseInterface
         $this->statusCode = $statusCode;
         if (array_key_exists($statusCode,self::$statusTexts)){
             $this->statusText = self::$statusTexts[$statusCode];
+        }else{
+            $this->statusCode = 612;
+            $this->statusText = self::$statusTexts[612];
         }
         $this->headers = $headers;
     }
 
     public function send()
     {
-        foreach($this->headers as $header){
+        foreach ($this->headers as $header) {
             header($header, false, $this->statusCode);
         }
         header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
-
         echo $this->content;
         return $this->content;
     }
