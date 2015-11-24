@@ -23,7 +23,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
         $config = new Config();
         $config->loadFile(dirname(__FILE__) . '/../../../../JepiFw/System/config.ini');
-        $this->object = new Router($config, 'Test', 'testMethod', null, new Input(array('param1' => 1, 'param2' => 2),false));
+        $this->object = new Router($config, '/demo/testmethod', new Input(array('param1' => 1, 'param2' => 2),false));
     }
 
     /**
@@ -39,14 +39,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
      */
     public function testGetController(){
 
-        $this->assertEquals("\\App\\Controllers\\Test",$this->object->getController());
+        $this->assertEquals("\\App\\Controllers\\Demo",$this->object->getController());
     }
 
     /**
      * @covers Jepi\Fw\Router\Router::getAction
      */
     public function testGetAction(){
-        $this->assertEquals("testMethod", $this->object->getAction());
+        $this->assertEquals("testmethod", $this->object->getAction());
     }
 
     /**
