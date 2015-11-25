@@ -12,6 +12,7 @@ namespace Jepi\Fw\System\Model;
 
 class MySqlModelAbstract implements ModelInterface
 {
+
     public function __construct($name = null) {
         if(is_null($name)){ //Open the connection send in the parameter $name.
             $this->connection = $this->openConnection($name);

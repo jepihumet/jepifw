@@ -11,7 +11,6 @@ namespace Jepi\Fw\Config;
  */
 class Config extends ConfigAbstract {
 
-
     public function __construct() {
         $this->config = array();
     }

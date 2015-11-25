@@ -1,23 +1,29 @@
 <?php
 /**
- * ConnectionsManager.php
+ * Connections.php
  *
  * @package     JepiFW
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
  * @link        http://jepihumet.com
  */
 
-namespace Jepi\Fw\System\Model;
+namespace Jepi\Fw\Model;
 
+use Jepi\Fw\Config\Config;
 use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\Exceptions\ModelException;
 
-class ConnectionsManager
+class Connections
 {
     /**
      * @var ConfigInterface
      */
-    public $config = null;
+    private $config = null;
+
+    /**
+     * @var ConfigInterface
+     */
+    private $dbConfig = null;
 
     /**
      * @var array({name, link}).
@@ -26,6 +32,7 @@ class ConnectionsManager
 
     public function __construct(ConfigInterface $config) {
         $this->config = $config;
+        $this->dbConfig = new Config();
     }
 
     /**
@@ -38,7 +45,7 @@ class ConnectionsManager
      */
 
     public function openMySqlConnection($name = null) {
-        $defaultConnection = $this->config->get('Database', 'default');
+        $defaultConnection = $this->config->get('Database', 'defaultConnection');
         if (is_null($name)){
             $name = $defaultConnection;
         }
@@ -50,21 +57,22 @@ class ConnectionsManager
         //Open new connection
         try {
             //Get the configuration of the connection.
-            $host = $this->config->get('DB_'.$name, 'host');
-            $port = $this->config->get('DB_'.$name, 'port');
-            $name = $this->config->get('DB_'.$name, 'name');
-            $user = $this->config->get('DB_'.$name, 'user');
-            $pass = $this->config->get('DB_'.$name, 'pass');
+            $host = $this->config->get('Database', 'host');
+            $port = $this->config->get('Database', 'port');
+            $user = $this->config->get('Database', 'user');
+            $pass = $this->config->get('Database', 'pass');
+            $db = $this->config->get('Database', 'name');
+
             //Create the new connection.
-            $connection = new PDO('mysql:host=' . $host . ';port=' . $port . ';dbname=' . $name, $user, $pass,
-                array(PDO::MYSQL_ATTR_FOUND_ROWS => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8" ));
-            $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $connection = new \PDO($connData = 'mysql:host=' . $host[$name] . ';port=' . $port[$name] . ';dbname=' . $db[$name], $user[$name], $pass[$name],
+                array(\PDO::MYSQL_ATTR_FOUND_ROWS => true, \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8" ));
+            $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
             $this->connections[] = (object)array('name'=>$name,'link'=>$connection);
 
             return $connection;
         } catch (Exception $e) {
-            throw new ModelException('Error trying to connect to db');
+            throw new ModelException("Error trying to connect to database [$name]");
         }
     }
 
@@ -76,7 +84,7 @@ class ConnectionsManager
      * @return bool
      */
     public function closeConnection($name = null) {
-        $defaultConnection = $this->config->get('Database', 'default');
+        $defaultConnection = $this->config->get('Database', 'defaultConnection');
         if (is_null($name)){
             $name = $defaultConnection;
         }

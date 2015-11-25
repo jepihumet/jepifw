@@ -41,6 +41,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $config = self::$object->getData();
         $this->assertTrue(count($config) > 0);
         $this->assertTrue(array_key_exists('Routing',$config));
+
+        return self::$object;
     }
 
     /**
