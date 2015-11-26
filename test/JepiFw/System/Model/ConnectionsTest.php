@@ -1,6 +1,7 @@
 <?php
 
 namespace Jepi\Fw\Model;
+
 use Jepi\Fw\Config\Config;
 
 /**
@@ -28,17 +29,17 @@ class ConnectionsTest extends \PHPUnit_Framework_TestCase {
      * This method is called after a test is executed.
      */
     protected function tearDown() {
-
+        
     }
 
     /**
      * @covers Jepi\Fw\System\Model\ConnectionsManager::openMySqlConnection
      */
     public function testOpenMySqlConnection() {
-        try{
+        try {
             $connection = self::$object->openMySqlConnection('default');
-            $this->assertEquals("PDO",get_class($connection));
-        }catch(Exception $e) {
+            $this->assertEquals("PDO", get_class($connection));
+        } catch (Exception $e) {
             $this->assertTrue(false);
         }
     }
@@ -48,10 +49,10 @@ class ConnectionsTest extends \PHPUnit_Framework_TestCase {
      * @covers Jepi\Fw\System\Model\ConnectionsManager::closeConnection
      */
     public function testCloseConnection() {
-        try{
+        try {
             $closed = self::$object->closeConnection('default');
             $this->assertTrue($closed);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $this->assertTrue(false);
         }
     }
