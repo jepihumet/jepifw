@@ -38,8 +38,8 @@ class MySqlModelAbstractTest extends \PHPUnit_Framework_TestCase {
      * @covers Jepi\Fw\Model\MySqlModelAbstract::select
      */
     public function testSelect() {
-        /*$data = $this->object->listUsers();
-        $this->assertEquals(0, count($data));*/
+        $data = $this->object->listUsers();
+        $this->assertEquals(0, count($data));
     }
 
     /**
