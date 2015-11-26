@@ -1,6 +1,6 @@
 <?php
 
-namespace Jepi\Fw\System\Model;
+namespace Jepi\Fw\Model;
 
 /**
  * ModelInterface.php
@@ -11,7 +11,7 @@ namespace Jepi\Fw\System\Model;
  */
 interface ModelInterface
 {
-    public function __construct($connection);
+    public function __construct(Connections $connections, $name = null);
     public function select($query);
     public function insert($query);
     public function update($query);
