@@ -27,9 +27,12 @@ class DITest extends \PHPUnit_Framework_TestCase {
      * @covers Jepi\Fw\DependencyInjection\DI::get
      */
     public function testGet() {
-        $a = DI::get('ClassA');
+        $a = DI::get('Jepi\Fw\DependencyInjection\ClassA');
+        $this->assertEquals("Jepi\\Fw\\DependencyInjection\\ClassA", get_class($a));
 
-        $this->assertEquals("ClassA", get_class($a));
+        $b = DI::get('Jepi\Fw\DependencyInjection\ClassB');
+        $this->assertEquals("Jepi\\Fw\\DependencyInjection\\ClassB", get_class($b));
+        $this->assertEquals("Jepi\\Fw\\DependencyInjection\\ClassA", get_class($b->getA()));
     }
 
 }

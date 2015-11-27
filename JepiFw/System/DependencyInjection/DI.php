@@ -25,13 +25,13 @@ class DI {
             $reflectionParameters = $constructorReflection->getParameters();
             $arguments = array();
             foreach($reflectionParameters as $reflectionParameter){
-                $paramClass = $reflectionParameter->getDeclaringClass();
                 $paramName = $reflectionParameter->getName();
+                $paramClass = $reflectionParameter->getClass()->name;
 
                 $paramInstance = DI::get($paramClass);
                 $arguments[$paramName] = $paramInstance;
             }
-            $instance = $reflectionClass->newInstance($arguments);
+            $instance = $reflectionClass->newInstanceArgs($arguments);
             self::$container[$className] = $instance;
 
             return self::$container[$className];
