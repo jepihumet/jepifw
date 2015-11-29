@@ -2,11 +2,8 @@
 
 namespace Jepi\Fw\FrontController;
 
-use Jepi\Fw\DependencyInjection;
 use Composer\Autoload\ClassLoader;
-use Jepi\Fw\Config\Config;
 use Jepi\Fw\Config\ConfigAbstract;
-use Jepi\Fw\Exceptions\JepiException;
 use Jepi\Fw\IO\Request;
 use Jepi\Fw\IO\RequestInterface;
 use Jepi\Fw\IO\Response;
@@ -31,32 +28,37 @@ class FrontController implements FrontControllerInterface {
      */
     protected $autoload = null;
 
-//    /**
-//     * @var ContainerInterface
-//     */
-//    protected $container = null;
-
     /**
      * @var RequestInterface
      */
     protected $request = null;
 
-    public function __construct(ClassLoader $autoload) {
+    public function __construct(ClassLoader $autoload, ConfigAbstract $config, Request $request) {
         $this->initErrorManagement();
         $this->autoload = $autoload;
-        $this->config = new Config();
+        $this->config = $config;
+        $this->request = $request;
         $this->loadConfigFiles();
     }
 
     private function initErrorManagement() {
-        set_exception_handler(function (JepiException $e) {
+        set_exception_handler(function (\Exception $e) {
             //Load Error View
             $trace = $e->getTraceAsString();
             $trace = nl2br($trace);
             $errorMsg = $e->getMessage();
-            $errorType = $e->getExceptionType();
+            $implements = class_implements($e);
+            if (in_array('JepiException', $implements)){
+                $errorType = $e->getExceptionType();
+            }else{
+                $errorType = 'PHP Error';
+            }
+            $errorCode = $e->getCode();
+            if ($errorCode == -1){
+                $errorCode = 500;
+            }
 
-            $content = sprintf('<h2>Error %s: %s</h2><p>%s</p></br>%s', 'X', $errorType, $errorMsg, $trace);
+            $content = sprintf('<h2>Error %s: %s</h2><p>%s</p></br>%s', $errorCode, $errorType, $errorMsg, $trace);
 
             //Create Response and send it
             $response = new Response($content, $e->getCode());
@@ -75,7 +77,6 @@ class FrontController implements FrontControllerInterface {
     }
 
     public function run() {
-        $this->request = new Request($this->config);
         $router = $this->request->validateRequest();
 
         $controller = $router->getController();

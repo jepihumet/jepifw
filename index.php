@@ -23,7 +23,11 @@ function jlog($key, $value){
 }
 
 $loader = require 'vendor/autoload.php';
+$container = DI\ContainerBuilder::buildDevContainer();
 
-\Jepi\Fw\DependencyInjection\DI::addClass('Composer\Autoload\ClassLoader', $loader);
-$frontController = \Jepi\Fw\DependencyInjection\DI::get('\Jepi\Fw\FrontController\FrontController');
+$containerBuilder = new \DI\ContainerBuilder;
+$containerBuilder->addDefinitions(__DIR__ . '/diConfig.php');
+$container = $containerBuilder->build();
+
+$frontController = $container->get('Jepi\Fw\FrontController\FrontController');
 $frontController->run();
