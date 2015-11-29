@@ -12,7 +12,11 @@ namespace Jepi\Fw\DependencyInjection;
  */
 class DI {
     static private $container = array();
-    
+
+    public static function addClass($className, $instance){
+        self::$container[$className] = $instance;
+    }
+
     public static function get($className, $parameters = array()){
         if (in_array($className, array_keys(self::$container))){
             //class exists
