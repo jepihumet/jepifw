@@ -104,6 +104,9 @@ class RequestData
         return $this->queryString;
     }
 
+    /**
+     * @param $notFoundDefaultValue
+     */
     public function __construct($notFoundDefaultValue){
         $this->notFoundDefaultValue = $notFoundDefaultValue;
 
@@ -119,6 +122,10 @@ class RequestData
         $this->queryString = $this->getServerData('QUERY_STRING');
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     */
     private function getServerData($key){
         if (array_key_exists($key, $_SERVER)){
             return $_SERVER[$key];

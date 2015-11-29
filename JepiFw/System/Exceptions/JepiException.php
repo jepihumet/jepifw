@@ -10,13 +10,15 @@
 
 namespace Jepi\Fw\Exceptions;
 
+use Jepi\Fw\IO\Response;
+
 class JepiException extends \Exception
 {
     protected $exceptionType = "Exception";
 
     public function getProductionMessage()
     {
-        $texts = \Jepi\Fw\IO\Response::$statusTexts;
+        $texts = Response::$statusTexts;
         if (array_key_exists($this->getCode(), $texts)){
             $message = $texts[$this->getCode()];
         }else{

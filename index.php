@@ -24,5 +24,6 @@ function jlog($key, $value){
 
 $loader = require 'vendor/autoload.php';
 
-$frontController = new \Jepi\Fw\FrontController\FrontController($loader);
+\Jepi\Fw\DependencyInjection\DI::addClass('Composer\Autoload\ClassLoader', $loader);
+$frontController = \Jepi\Fw\DependencyInjection\DI::get('\Jepi\Fw\FrontController\FrontController');
 $frontController->run();

@@ -11,10 +11,6 @@ namespace Jepi\Fw\Libraries;
  */
 class FileManager {
 
-    public function __construct() {
-        
-    }
-
     /**
      * Recursive function that returns all directories inside a base directory.
      *

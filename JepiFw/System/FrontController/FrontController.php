@@ -2,6 +2,7 @@
 
 namespace Jepi\Fw\FrontController;
 
+use Jepi\Fw\DependencyInjection;
 use Composer\Autoload\ClassLoader;
 use Jepi\Fw\Config\Config;
 use Jepi\Fw\Config\ConfigAbstract;
