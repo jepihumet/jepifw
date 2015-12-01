@@ -2,9 +2,7 @@
 
 namespace Jepi\Fw\FrontController;
 
-use Composer\Autoload\ClassLoader;
-use Jepi\Fw\Config\ConfigAbstract;
-use Jepi\Fw\IO\Request;
+use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\IO\RequestInterface;
 use Jepi\Fw\IO\Response;
 use Jepi\Fw\Libraries\FileManager;
@@ -19,26 +17,26 @@ use Jepi\Fw\Libraries\FileManager;
 class FrontController implements FrontControllerInterface {
 
     /**
-     * @var ConfigAbstract
+     * @var ConfigInterface
      */
-    protected $config = null;
-
-    /**
-     * @var ClassLoader
-     */
-    protected $autoload = null;
+    private $config;
 
     /**
      * @var RequestInterface
      */
-    protected $request = null;
+    private $request;
 
-    public function __construct(ClassLoader $autoload, ConfigAbstract $config, Request $request) {
+    /**
+     * @var FileManager
+     */
+    private $fileManager;
+
+    public function __construct(ConfigInterface $config, RequestInterface $request, FileManager $fileManager) {
         $this->initErrorManagement();
-        $this->autoload = $autoload;
+        $this->loadConfigFiles();
         $this->config = $config;
         $this->request = $request;
-        $this->loadConfigFiles();
+        $this->fileManager = $fileManager;
     }
 
     private function initErrorManagement() {
@@ -67,9 +65,8 @@ class FrontController implements FrontControllerInterface {
     }
 
     private function loadConfigFiles() {
-        $fileManager = new FileManager();
         $this->config->loadFile(SYSTEM_ROOT . DS . 'config.ini');
-        $configFiles = $fileManager->listAllFilesInDirectory(APP_ROOT . DS . 'Config');
+        $configFiles = $this->fileManager->listAllFilesInDirectory(APP_ROOT . DS . 'Config');
 
         foreach ($configFiles as $configFile) {
             $this->config->loadFile($configFile);

@@ -107,7 +107,7 @@ class RequestData
     /**
      * @param $notFoundDefaultValue
      */
-    public function __construct($notFoundDefaultValue){
+    public function __construct($notFoundDefaultValue = null){
         $this->notFoundDefaultValue = $notFoundDefaultValue;
 
         $this->remoteHost= $this->getServerData('REMOTE_HOST');

@@ -3,6 +3,7 @@ namespace Jepi\Fw\IO;
 
 
 use Jepi\Fw\Config\ConfigAbstract;
+use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\Router\Router;
 use Jepi\Fw\Router\RouterInterface;
 
@@ -26,7 +27,7 @@ class Request implements RequestInterface
     protected $router;
 
     /**
-     * @var ConfigAbstract
+     * @var ConfigInterface
      */
     protected $config;
 
@@ -46,12 +47,12 @@ class Request implements RequestInterface
     private $requestData;
 
     /**
-     * @param ConfigAbstract $config
+     * @param ConfigInterface $config
      */
-    public function __construct(ConfigAbstract $config){
+    public function __construct(ConfigInterface $config, RouterInterface $router, RequestData $requestData, DataCollection $dataCollection){
         $this->config = $config;
         $this->unsetValue = $config->get('Input', 'UnsetValue');
-        $this->requestData = new RequestData(null);
+        $this->requestData = $requestData;
         $this->dataCollection = new DataCollection($this->unsetValue);
     }
 

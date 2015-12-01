@@ -11,7 +11,7 @@ namespace Jepi\Fw\Model;
 
 use Jepi\Fw\Exceptions\ModelException;
 
-abstract class MySqlModelAbstract implements ModelInterface
+class MySqlModel implements ModelInterface
 {
     /**
      * @var \PDO
