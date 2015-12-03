@@ -22,8 +22,8 @@ class MySqlModelAbstractTest extends \PHPUnit_Framework_TestCase {
         $config = new Config();
         $config->loadFile(dirname(__FILE__) . '/../../../../JepiFw/App/Config/config.ini');
         $connections = new Connections($config);
-
-        $this->object = new ModelExample($connections);
+        $pdo = $connections->openMySqlConnection('fw');
+        $this->object = new ModelExample($pdo);
     }
 
     /**
