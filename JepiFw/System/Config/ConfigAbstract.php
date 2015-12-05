@@ -17,7 +17,6 @@ abstract class ConfigAbstract implements ConfigInterface {
      * @var array<mixed>
      */
     protected $config = array();
-    protected $noValue = null;
 
     /**
      * @param $section
