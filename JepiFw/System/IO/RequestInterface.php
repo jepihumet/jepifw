@@ -10,6 +10,8 @@
 
 namespace Jepi\Fw\IO;
 
+use Jepi\Fw\Router\RouterInterface;
+
 interface RequestInterface {
 
     /**
@@ -24,7 +26,7 @@ interface RequestInterface {
     public function getHeader($key);
 
     /**
-     * @return \Jepi\Fw\Router\RouterInterface
+     * @return RouterInterface
      */
     public function validateRequest();
 }

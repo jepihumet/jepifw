@@ -40,13 +40,16 @@ class DataCollection
     /**
      * @param $unsetValue
      */
-    public function __construct($unsetValue){
+    public function setup($unsetValue){
         $inputJSON = file_get_contents('php://input');
         $files = json_decode($inputJSON, TRUE);
 
-        $this->get = new Input($_GET, $unsetValue);
-        $this->post = new Input($_POST, $unsetValue);
-        $this->files = new Input($files, $unsetValue);
+        $this->get = new Input();
+        $this->get->setup($_GET, $unsetValue);
+        $this->post = new Input();
+        $this->post->setup($_POST, $unsetValue);
+        $this->files = new Input();
+        $this->files->setup($files, $unsetValue);
     }
 
     /**

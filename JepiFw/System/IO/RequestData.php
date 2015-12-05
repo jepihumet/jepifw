@@ -10,6 +10,8 @@
 namespace Jepi\Fw\IO;
 
 
+use Jepi\Fw\Config\ConfigInterface;
+
 class RequestData
 {
     private $notFoundDefaultValue;
@@ -105,10 +107,10 @@ class RequestData
     }
 
     /**
-     * @param $notFoundDefaultValue
+     * @param ConfigInterface $config
      */
-    public function __construct($notFoundDefaultValue = null){
-        $this->notFoundDefaultValue = $notFoundDefaultValue;
+    public function __construct(ConfigInterface $config){
+        $this->notFoundDefaultValue = $config->get('Input', 'UnsetValue');
 
         $this->remoteHost= $this->getServerData('REMOTE_HOST');
         $this->remoteAddr = $this->getServerData('REMOTE_ADDR');

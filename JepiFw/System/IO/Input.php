@@ -27,7 +27,7 @@ class Input extends XssFilter implements InputInterface
      * @param $dataArray
      * @param $unsetValue
      */
-    public function __construct($dataArray, $unsetValue){
+    public function setup($dataArray, $unsetValue){
         $this->unsetValue = $unsetValue;
         $this->data = $dataArray;
     }
