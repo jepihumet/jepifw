@@ -2,6 +2,7 @@
 
 namespace Jepi\Fw\FrontController;
 
+use DI\Container;
 use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\IO\RequestInterface;
 use Jepi\Fw\IO\Response;
@@ -17,26 +18,41 @@ use Jepi\Fw\Libraries\FileManager;
 class FrontController implements FrontControllerInterface {
 
     /**
+     * @Inject
      * @var ConfigInterface
      */
-    private $config;
+    public $config;
 
     /**
+     * @Inject
      * @var RequestInterface
      */
-    private $request;
+    public $request;
 
     /**
+     * @Inject
      * @var FileManager
      */
     private $fileManager;
 
-    public function __construct(ConfigInterface $config, RequestInterface $request, FileManager $fileManager) {
-        $this->initErrorManagement();
-        $this->loadConfigFiles();
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * @param ConfigInterface $config
+     * @param RequestInterface $request
+     * @param Container $container
+     * @param FileManager $fileManager
+     */
+    public function __construct(ConfigInterface $config, RequestInterface $request, Container $container, FileManager $fileManager) {
         $this->config = $config;
         $this->request = $request;
+        $this->container = $container;
         $this->fileManager = $fileManager;
+        $this->loadConfigFiles();
+        $this->initErrorManagement();
     }
 
     private function initErrorManagement() {
@@ -80,9 +96,25 @@ class FrontController implements FrontControllerInterface {
         $action = $router->getAction();
         $parameters = $router->getParameters();
         
-        $output = call_user_func_array(array(new $controller, $action), $parameters);
+        $output = call_user_func_array(array($this->container->get($controller), $action), $parameters);
         $response = new Response($output, 200);
         $response->send();
+    }
+
+    /**
+     * @return RequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
 }

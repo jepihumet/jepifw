@@ -25,11 +25,8 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase {
         define('APP_ROOT', FW_ROOT . DS . 'App');
         define('SYSTEM_ROOT', FW_ROOT . DS . 'System');
 
-        $loader = require __DIR__.'/../../../../vendor/autoload.php';
-        $container = ContainerBuilder::buildDevContainer();
-
         $containerBuilder = new ContainerBuilder();
-        $containerBuilder->addDefinitions(__DIR__ . '/../../../../diConfig.php');
+        $containerBuilder->addDefinitions(SYSTEM_ROOT.'/di.php');
         $container = $containerBuilder->build();
 
         $this->object = $container->get('Jepi\Fw\FrontController\FrontController');
