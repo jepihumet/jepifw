@@ -21,18 +21,12 @@ class Connections
     private $config = null;
 
     /**
-     * @var ConfigInterface
-     */
-    private $dbConfig = null;
-
-    /**
      * @var array({name, link}).
      */
     private $connections = array();
 
     public function __construct(ConfigInterface $config) {
         $this->config = $config;
-        $this->dbConfig = new Config();
     }
 
     /**
@@ -50,7 +44,7 @@ class Connections
             $name = $defaultConnection;
         }
         foreach ($this->connections as $connection) {
-            if($connection->name == $name) {
+            if($connection->name == $name && !is_null($connection->link)) {
                 return $connection->link;
             }
         }
@@ -96,5 +90,15 @@ class Connections
             }
         }
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function closeConnections(){
+        foreach($this->connections as $key => $connection){
+            $this->connections[$key]->link = null;
+        }
+        return true;
     }
 }
