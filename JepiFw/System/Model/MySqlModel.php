@@ -1,6 +1,6 @@
 <?php
 /**
- * MySqlModelAbstract.php
+ * MySqlModel.php
  *
  * @package     JepiFW
  * @author      Jepi Humet Alsius <jepihumet@gmail.com>
@@ -16,17 +16,19 @@ class MySqlModel implements ModelInterface
     /**
      * @var \PDO
      */
-    protected $connection;
+    protected $pdo;
 
-    protected $name = "";
+    /**
+     * If dbConnection is null this model will connect to default database defined in config.ini file
+     * @var string|null
+     */
+    protected $dbConnection = null;
 
     /**
      * @param Connections $connections
-     * @param null $name
-     * @throws \Jepi\Fw\Exceptions\ModelException
      */
-    public function __construct(Connections $connections, $name = null) {
-        $this->connection = $connections->openMySqlConnection($name);
+    public function __construct(Connections $connections){
+        $this->pdo = $connections->openMySqlConnection($this->dbConnection);
     }
 
     /**
@@ -36,7 +38,7 @@ class MySqlModel implements ModelInterface
      */
     private function execute($SQL) {
         try {
-            $queryPrepare = $this->connection->prepare($SQL);
+            $queryPrepare = $this->pdo->prepare($SQL);
             $queryPrepare->execute();
         } catch (\PDOException $e) {
             throw new ModelException('Error in the Select QUERY ('.$SQL.') '
@@ -65,7 +67,7 @@ class MySqlModel implements ModelInterface
     public function insert($query)
     {
         $this->execute($query);
-        return $this->connection->lastInsertId();
+        return $this->pdo->lastInsertId();
     }
 
     /**
