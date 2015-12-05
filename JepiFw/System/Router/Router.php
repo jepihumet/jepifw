@@ -10,16 +10,21 @@
 
 namespace Jepi\Fw\Router;
 
+use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\Exceptions\RouterException;
-use Jepi\Fw\Config\ConfigAbstract;
 use Jepi\Fw\IO\InputInterface;
 
 class Router implements RouterInterface {
 
     /**
-     * @var ConfigAbstract
+     * @var ConfigInterface
      */
     protected $config;
+
+    /**
+     * @var InputInterface
+     */
+    protected $inputData;
 
     /**
      * @var string
@@ -37,30 +42,31 @@ class Router implements RouterInterface {
     protected $uriParams;
 
     /**
-     * @var InputInterface
-     */
-    protected $inputData;
-
-    /**
      * @var array
      */
     protected $parameters;
 
     /**
-     * @param ConfigAbstract $config
-     * @param string $uri
+     * @param ConfigInterface $config
      * @param InputInterface $inputData
+     * @throws RouterException
      */
-    public function __construct(ConfigAbstract $config, $uri, InputInterface $inputData) {
+    public function __construct(ConfigInterface $config, InputInterface $inputData) {
         $this->config = $config;
+        $this->inputData = $inputData;
+    }
 
+    /**
+     * @param string $uri
+     * @throws RouterException
+     */
+    public function checkRoute($uri){
         @list($controller, $action, $params) = $this->parseUri($uri);
 
         $this->controller = $controller;
         $this->action = $action;
         $this->uriParams = $params;
-        $this->inputData = $inputData;
-        
+
         $this->checkController();
         $this->checkAction();
     }
@@ -78,8 +84,8 @@ class Router implements RouterInterface {
         }
         return explode('/', $cleanPath, 3);
     }
+
     /**
-     * 
      * @throws RouterException
      */
     private function checkController() {
@@ -97,7 +103,6 @@ class Router implements RouterInterface {
     }
 
     /**
-     * 
      * @throws RouterException
      */
     private function checkAction() {
@@ -115,7 +120,6 @@ class Router implements RouterInterface {
     }
 
     /**
-     * 
      * @param \ReflectionMethod $reflectionMethod
      * @throws RouterException
      */
@@ -139,7 +143,6 @@ class Router implements RouterInterface {
     }
 
     /**
-     * 
      * @return string
      */
     public function getController() {
@@ -147,7 +150,6 @@ class Router implements RouterInterface {
     }
 
     /**
-     * 
      * @return string
      */
     public function getAction() {
@@ -155,7 +157,6 @@ class Router implements RouterInterface {
     }
 
     /**
-     * 
      * @return array
      */
     public function getParameters() {

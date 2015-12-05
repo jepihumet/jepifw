@@ -11,18 +11,21 @@
 namespace Jepi\Fw\Router;
 
 
-use Jepi\Fw\Config\ConfigAbstract;
+use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\IO\InputInterface;
 
 interface RouterInterface
 {
     /**
-     * @param ConfigAbstract $config
-     * @param $uri
+     * @param ConfigInterface $config
      * @param InputInterface $inputData
      */
-    public function __construct(ConfigAbstract $config, $uri, InputInterface $inputData);
+    public function __construct(ConfigInterface $config, InputInterface $inputData);
 
+    /**
+     * @param $uri
+     */
+    public function checkRoute($uri);
     /**
      * 
      * @return string
