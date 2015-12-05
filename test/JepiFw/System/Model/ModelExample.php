@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: developer
- * Date: 26/11/15
- * Time: 9:13
- */
 
 namespace Jepi\Fw\Model;
 
 
-class ModelExample extends MySqlModelAbstract
+class ModelExample extends MySqlModel
 {
     /**
      * @return mixed
@@ -32,7 +26,7 @@ class ModelExample extends MySqlModelAbstract
      * @return int
      */
     public function createUser($name){
-        return parent::insert("INSERT INTO user (name) VALUES ('$name')");
+        return $this->insert("INSERT INTO user (name) VALUES ('$name')");
     }
 
     /**
@@ -41,7 +35,7 @@ class ModelExample extends MySqlModelAbstract
      * @return int
      */
     public function updateUser($id, $name){
-        return parent::update("UPDATE user SET name = '$name' WHERE id = $id");
+        return $this->update("UPDATE user SET name = '$name' WHERE id = $id");
     }
 
     /**
@@ -49,6 +43,6 @@ class ModelExample extends MySqlModelAbstract
      * @return int
      */
     public function deleteUser($id){
-        return parent::delete("DELETE FROM user WHERE id = $id");
+        return $this->delete("DELETE FROM user WHERE id = $id");
     }
 }

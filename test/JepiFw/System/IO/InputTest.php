@@ -32,8 +32,10 @@ class InputTest extends \PHPUnit_Framework_TestCase {
         $_POST['attr2'] = 2;
         $_POST['attr3'] = 3;
         $_POST['xssInjection'] = $this->xssInjection;
-        $this->getInput = new Input($_GET, false);
-        $this->postInput = new Input($_POST, false);
+        $this->getInput = new Input();
+        $this->getInput->setup($_GET, false);
+        $this->postInput = new Input();
+        $this->postInput->setup($_POST, false);
     }
 
     /**
