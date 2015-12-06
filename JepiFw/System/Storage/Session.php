@@ -48,12 +48,20 @@ class Session
     }
 
     private function startSession(){
-        session_start();
-        $this->sessionId = session_id();
+        try {
+            session_start();
+            $this->sessionId = session_id();
+        }catch(Exception $e){
+            throw new StorageException($e->getMessage());
+        }
     }
 
     public function killSession(){
-        session_destroy();
+        try {
+            session_destroy();
+        }catch(Exception $e){
+            throw new StorageException($e->getMessage());
+        }
     }
 
     public function get($key){
