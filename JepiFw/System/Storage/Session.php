@@ -64,39 +64,39 @@ class Session
         }
     }
 
-    public function get($key){
-        if (array_key_exists($key, $_SESSION)){
-            return $_SESSION[$key];
+    public function get($name){
+        if (array_key_exists($name, $_SESSION)){
+            return $_SESSION[$name];
         } else {
             return $this->unsetValue;
         }
     }
 
-    public function set($key, $value){
+    public function set($name, $value){
         try{
-            $_SESSION[$key] = $value;
+            $_SESSION[$name] = $value;
             return true;
         }catch(Exception $e){
             return false;
         }
     }
 
-    public function flash($key){
-        if (array_key_exists('flash', $_SESSION) && array_key_exists($key, $_SESSION['flash'])){
-            $var = $_SESSION['flash'][$key];
-            unset($_SESSION['flash'][$key]);
+    public function flash($name){
+        if (array_key_exists('flash', $_SESSION) && array_key_exists($name, $_SESSION['flash'])){
+            $var = $_SESSION['flash'][$name];
+            unset($_SESSION['flash'][$name]);
             return $var;
         } else {
             return $this->unsetValue;
         }
     }
 
-    public function setFlash($key, $value){
+    public function setFlash($name, $value){
         try{
             if (!array_key_exists('flash', $_SESSION)){
                 $_SESSION['flash'] = array();
             }
-            $_SESSION['flash'][$key] = $value;
+            $_SESSION['flash'][$name] = $value;
             return true;
         }catch(Exception $e){
             return false;
