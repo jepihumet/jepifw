@@ -3,6 +3,7 @@
 namespace Jepi\Fw\FrontController;
 
 use DI\Container;
+use DI\Definition\Helper\ObjectDefinitionHelper;
 use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\IO\RequestInterface;
 use Jepi\Fw\IO\Response;
@@ -18,19 +19,16 @@ use Jepi\Fw\Libraries\FileManager;
 class FrontController implements FrontControllerInterface {
 
     /**
-     * @Inject
      * @var ConfigInterface
      */
     public $config;
 
     /**
-     * @Inject
      * @var RequestInterface
      */
     public $request;
 
     /**
-     * @Inject
      * @var FileManager
      */
     private $fileManager;
@@ -53,6 +51,7 @@ class FrontController implements FrontControllerInterface {
         $this->fileManager = $fileManager;
         $this->loadConfigFiles();
         $this->initErrorManagement();
+        $this->updateAbstractions();
     }
 
     private function initErrorManagement() {
@@ -89,6 +88,16 @@ class FrontController implements FrontControllerInterface {
         }
     }
 
+    private function updateAbstractions(){
+        foreach($this->config->getSection('Abstractions') as $final => $abstraction){
+            $definitionHelper = new ObjectDefinitionHelper($final);
+            $this->container->set($final, $definitionHelper);
+        }
+    }
+
+    /**
+     * @throws \DI\NotFoundException
+     */
     public function run() {
         $router = $this->request->validateRequest();
 

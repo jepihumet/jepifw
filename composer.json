@@ -21,7 +21,8 @@
         "psr-4": {
             "Jepi\\Fw\\": [
                 "JepiFw/System",
-                "test/JepiFw/System"
+                "test/JepiFw/System",
+                "JepiFw/App/Core"
             ],
             "App\\": [
                 "JepiFw/App",
