@@ -1,6 +1,9 @@
 <?php
 
 namespace Jepi\Fw\Test;
+use DI\Container;
+use Jepi\Fw\FrontController\FrontController;
+
 /**
  * FwTestBase.php
  *
