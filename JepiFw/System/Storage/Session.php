@@ -47,6 +47,14 @@ class Session
         $this->startSession();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDefaultValue()
+    {
+        return $this->unsetValue;
+    }
+
     private function startSession(){
         try {
             session_start();

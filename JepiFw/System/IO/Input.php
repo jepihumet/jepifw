@@ -21,7 +21,7 @@ class Input extends XssFilter implements InputInterface
     /**
      * @var mixed
      */
-    private $unsetValue;
+    protected $unsetValue;
 
     /**
      * @param $dataArray

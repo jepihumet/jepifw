@@ -12,6 +12,10 @@ namespace Jepi\Fw\Security;
 
 class XssFilter
 {
+    /**
+     * @param $data
+     * @return bool|float|int|string
+     */
     public function xssPreventFilter($data){
         $trimmed = trim($data);
         $stripped = strip_tags($trimmed);
@@ -20,6 +24,10 @@ class XssFilter
         return $this->typedValue($sanitized);
     }
 
+    /**
+     * @param $value
+     * @return bool|float|int|string
+     */
     private function typedValue($value)
     {
         $typedValue = $value;

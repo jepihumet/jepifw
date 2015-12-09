@@ -11,9 +11,10 @@ namespace Jepi\Fw\Storage;
 
 
 use Jepi\Fw\Config\ConfigInterface;
+use Jepi\Fw\Exceptions\StorageException;
 use Jepi\Fw\Security\XssFilter;
 
-class Cookies
+class Cookies extends XssFilter
 {
     /**
      * @var ConfigInterface
@@ -21,19 +22,21 @@ class Cookies
     private $config;
 
     /**
-     * @var XssFilter
+     * All cookies set during the execution.
+     *
+     * @var array
      */
-    private $xssFilter;
-
-    /**
-     * @var mixed
-     */
-    private $configStorage;
+    private $data;
 
     /**
      * @var mixed
      */
     private $unsetValue;
+
+    /**
+     * @var mixed
+     */
+    private $configStorage;
 
     /**
      * @var int
@@ -64,7 +67,10 @@ class Cookies
      */
     private $httpOnly;
 
-
+    /**
+     * @param ConfigInterface $config
+     * @param XssFilter $xssFilter
+     */
     public function __construct(ConfigInterface $config, XssFilter $xssFilter)
     {
         $this->config = $config;
@@ -82,8 +88,60 @@ class Cookies
         $this->path = $this->config->get('Cookies', 'DefaultPath');
         $this->secure = $this->config->get('Cookies', 'DefaultSecure');
         $this->httpOnly = $this->config->get('Cookies', 'DefaultHttpOnly');
+
+        $this->data = array();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDefaultValue()
+    {
+        return $this->unsetValue;
+    }
+
+    /**
+     * @param $name
+     * @param null $value
+     * @param null $expire
+     * @param null $domain
+     * @param null $path
+     * @param null $secure
+     * @param null $httpOnly
+     * @throws StorageException
+     */
+    public function set($name, $value = null, $expire = null, $domain = null, $path = null, $secure = null, $httpOnly = null)
+    {
+        try {
+            if (is_null($domain)) {
+                $domain = $this->domain;
+            }
+            if (is_null($path)) {
+                $path = $this->path;
+            }
+            if (is_null($secure)) {
+                $secure = $this->secure;
+            }
+            if (is_null($httpOnly)) {
+                $httpOnly = $this->httpOnly;
+            }
+            if (!is_numeric($expire)) {
+                $expire = $this->expire;
+            }
+            $expire = ($expire > 0) ? time() + $expire : 0;
+
+            $this->data[$name] = $value;
+            setcookie($this->prefix . $name, $value, $expire, $path, $domain, $secure, $httpOnly);
+        } catch (Exception $e) {
+            throw new StorageException($e->getMessage());
+        }
+    }
+
+    /**
+     * @param $name
+     * @param bool|true $xssPrevent
+     * @return bool|float|int|string
+     */
     public function get($name, $xssPrevent = true)
     {
         $value = $this->unsetValue;
@@ -91,50 +149,37 @@ class Cookies
             $value = $_COOKIE[$name];
         }
         if ($xssPrevent) {
-            $value = $this->xssFilter->xssPreventFilter($value);
+            $value = $this->xssPreventFilter($value);
         }
         return $value;
     }
 
     /**
      * @param $name
-     * @param string $value
-     * @param string $expire minutes until cookie is alive
-     * @param string $domain
-     * @param string $path
-     * @param bool $secure
-     * @param bool $httpOnly
+     * @throws StorageException
      */
-    public function set($name, $value = null, $expire = null, $domain = null, $path = null, $secure = null, $httpOnly = null)
-    {
-        if (is_null($domain)) {
-            $domain = $this->domain;
-        }
-        if (is_null($path)) {
-            $path = $this->path;
-        }
-        if (is_null($secure)) {
-            $secure = $this->secure;
-        }
-        if (is_null($httpOnly)) {
-            $httpOnly = $this->httpOnly;
-        }
-        if (!is_numeric($expire)) {
-            $expire = $this->expire;
-        }
-        $expire = ($expire > 0) ? time() + $expire : 0;
-
-        setcookie($this->prefix . $name, $value, $expire, $path, $domain, $secure, $httpOnly);
-    }
-
     public function delete($name)
     {
+        unset($this->data[$name]);
         $this->set($name, null, -1);
     }
 
+    /**
+     * @param $name
+     * @throws StorageException
+     */
     public function touch($name)
     {
         $value = $this->get($name);
         $this->set($name, $value);
+    }
+
+    /**
+     * Array with all cookies set during the execution. Data does not contains all cookies stored in $_COOKIE global.
+     *
+     * @return array
+     */
+    public function getData(){
+        return $this->data;
     }
 }
