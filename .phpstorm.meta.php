@@ -1,8 +1,12 @@
 <?php
-/**
- * .phpstorm.meta.php
- *
- * @package     JepiFW
- * @author      Jepi Humet Alsius <jepihumet@gmail.com>
- * @link        http://jepihumet.com
- */
+namespace PHPSTORM_META
+{
+    $STATIC_METHOD_TYPES = [
+        \Interop\Container\ContainerInterface::get('') => [
+            "" == "@",
+        ],
+        \DI\Container::get('') => [
+            "" == "@",
+        ],
+    ];
+}
