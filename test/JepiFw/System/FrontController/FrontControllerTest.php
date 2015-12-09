@@ -18,12 +18,11 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase {
      * This method is called before a test is executed.
      */
     protected function setUp() {
-        define('DS', DIRECTORY_SEPARATOR);
         define('ROOT', dirname(__FILE__) . '/../../../..');
 
-        define('FW_ROOT', ROOT . DS . 'JepiFw');
-        define('APP_ROOT', FW_ROOT . DS . 'App');
-        define('SYSTEM_ROOT', FW_ROOT . DS . 'System');
+        define('FW_ROOT', ROOT . DIRECTORY_SEPARATOR . 'JepiFw');
+        define('APP_ROOT', FW_ROOT . DIRECTORY_SEPARATOR . 'App');
+        define('SYSTEM_ROOT', FW_ROOT . DIRECTORY_SEPARATOR . 'System');
 
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->addDefinitions(SYSTEM_ROOT.'/di.php');
