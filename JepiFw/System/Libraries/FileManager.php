@@ -42,7 +42,7 @@ class FileManager {
         foreach (scandir($baseDir) as $file) {
             if ($file == '.' || $file == '..')
                 continue;
-            $path = $baseDir . DS . $file;
+            $path = $baseDir . DIRECTORY_SEPARATOR . $file;
             if (is_file($path)) {
                 $files[] = $path;
             }

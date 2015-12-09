@@ -81,8 +81,8 @@ class FrontController implements FrontControllerInterface {
     }
 
     private function loadConfigFiles() {
-        $this->config->loadFile(SYSTEM_ROOT . DS . 'config.ini');
-        $configFiles = $this->fileManager->listAllFilesInDirectory(APP_ROOT . DS . 'Config');
+        $this->config->loadFile(SYSTEM_ROOT . DIRECTORY_SEPARATOR . 'config.ini');
+        $configFiles = $this->fileManager->listAllFilesInDirectory(APP_ROOT . DIRECTORY_SEPARATOR . 'Config');
 
         foreach ($configFiles as $configFile) {
             $this->config->loadFile($configFile);
