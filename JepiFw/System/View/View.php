@@ -62,6 +62,13 @@ class View implements ViewInterface
     }
 
     /**
+     * @return array
+     */
+    public function getVars(){
+        return $this->vars;
+    }
+
+    /**
      * @param $url
      * @param array $vars
      * @return string

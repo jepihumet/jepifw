@@ -8,6 +8,7 @@ use Jepi\Fw\Controller\Models;
 use Jepi\Fw\Controller\Views;
 use Jepi\Fw\Router\RouterInterface;
 use Jepi\Fw\Storage\Session;
+use Jepi\Fw\View\TwigView;
 use Jepi\Fw\View\ViewInterface;
 
 /**
