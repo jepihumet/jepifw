@@ -18,7 +18,7 @@ class ViewTest extends FwTestBase {
      * This method is called before a test is executed.
      */
     protected function setUp() {
-        $this->object = self::$container->get('Jepi\Fw\View');
+        $this->object = self::$container->get('Jepi\Fw\View\View');
     }
 
     /**
@@ -35,13 +35,12 @@ class ViewTest extends FwTestBase {
     public function testAddVar() {
         $this->object->addVar('content', 'hola');
         $vars = $this->object->getVars();
-        $this->assertTrue($vars['content'], 'hola');
-
+        $this->assertEquals($vars['content'], 'hola');
     }
 
     /**
      * @covers Jepi\Fw\View\View::get
-     * @depends testAddVa
+     * @depends testAddVar
      */
     public function testGet() {
         $template = $this->object->get('basic.php');

@@ -38,11 +38,6 @@ class View implements ViewInterface
     /**
      * @var string
      */
-    private $view = null;
-
-    /**
-     * @var string
-     */
     private $content = "";
 
     public function __construct(ConfigInterface $config, FileManager $fileManager)
