@@ -3,7 +3,6 @@
 namespace Jepi\Fw\FrontController;
 
 use DI\Container;
-use DI\Definition\Helper\ObjectDefinitionHelper;
 use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\IO\RequestInterface;
 use Jepi\Fw\IO\Response;
@@ -51,7 +50,6 @@ class FrontController implements FrontControllerInterface {
         $this->fileManager = $fileManager;
         $this->loadConfigFiles();
         $this->initErrorManagement();
-        $this->updateAbstractions();
     }
 
     private function initErrorManagement() {
@@ -88,13 +86,6 @@ class FrontController implements FrontControllerInterface {
         }
     }
 
-    private function updateAbstractions(){
-        foreach($this->config->getSection('Abstractions') as $final => $abstraction){
-            $definitionHelper = new ObjectDefinitionHelper($final);
-            $this->container->set($final, $definitionHelper);
-        }
-    }
-
     /**
      * @throws \DI\NotFoundException
      */
@@ -106,7 +97,7 @@ class FrontController implements FrontControllerInterface {
         $parameters = $router->getParameters();
         
         $output = call_user_func_array(array($this->container->get($controller), $action), $parameters);
-        $response = new Response($output, 200);
+        $response = new Renspose($output, 200);
         $response->send();
     }
 
