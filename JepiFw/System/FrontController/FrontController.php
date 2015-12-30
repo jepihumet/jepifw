@@ -97,7 +97,7 @@ class FrontController implements FrontControllerInterface {
         $parameters = $router->getParameters();
         
         $output = call_user_func_array(array($this->container->get($controller), $action), $parameters);
-        $response = new Renspose($output, 200);
+        $response = new Response($output, 200);
         $response->send();
     }
 
