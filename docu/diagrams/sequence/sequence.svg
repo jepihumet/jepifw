@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="159pt" style="width:227px;height:159px;" version="1.1" viewBox="0 0 227 159" width="227pt">
+    <defs>
+        <filter height="300%" id="f1" width="300%" x="-1" y="-1">
+            <feGaussianBlur result="blurOut" stdDeviation="2.0"/>
+            <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/>
+            <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/>
+            <feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/>
+        </filter>
+    </defs>
+    <g>
+        <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="32" x2="32" y1="39.6094" y2="120.3125"/>
+        <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="200.5" x2="200.5" y1="39.6094" y2="120.3125"/>
+        <rect fill="#FEFECE" filter="url(#f1)" height="31.6094" style="stroke: #A80036; stroke-width: 1.5;" width="44" x="8" y="3"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="30" x="15" y="24.5332">Alice</text>
+        <rect fill="#FEFECE" filter="url(#f1)" height="31.6094" style="stroke: #A80036; stroke-width: 1.5;" width="44" x="8" y="119.3125"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="30" x="15" y="140.8457">Alice</text>
+        <rect fill="#FEFECE" filter="url(#f1)" height="31.6094" style="stroke: #A80036; stroke-width: 1.5;" width="39" x="179.5" y="3"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="25" x="186.5" y="24.5332">Bob</text>
+        <rect fill="#FEFECE" filter="url(#f1)" height="31.6094" style="stroke: #A80036; stroke-width: 1.5;" width="39" x="179.5" y="119.3125"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="25" x="186.5" y="140.8457">Bob</text>
+        <polygon fill="#A80036" points="189,67.6094,199,71.6094,189,75.6094,193,71.6094" style="stroke: #A80036; stroke-width: 1.0;"/>
+        <line style="stroke: #A80036; stroke-width: 1.0;" x1="32" x2="195" y1="71.6094" y2="71.6094"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="135" x="39" y="67.1045">Authentication Request</text>
+        <polygon fill="#A80036" points="43,97.9609,33,101.9609,43,105.9609,39,101.9609" style="stroke: #A80036; stroke-width: 1.0;"/>
+        <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="37" x2="200" y1="101.9609" y2="101.9609"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="145" x="49" y="97.4561">Authentication Response</text>
+    </g>
+</svg>

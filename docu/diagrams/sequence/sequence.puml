@@ -1,0 +1,92 @@
+@startuml
+
+title Petició HTTP amb sense errors
+actor User
+boundary index.php
+entity Container
+entity FrontController
+entity FileManager
+entity Config
+entity Request
+entity RequestData
+entity DataCollection
+entity Router
+entity Response
+entity Input
+entity Controller
+entity RouterException
+entity ExceptionHandler
+
+autonumber
+User -> index.php: Page request
+index.php -> Container: get FrontController
+group Load config files
+    Container -> FrontController: __construct()
+    FrontController -> FileManager: list config.ini files
+    FileManager -> FrontController: files
+    loop #files times
+        FrontController -> Config: load from config.ini
+    end
+    FrontController --> ExceptionHandler: enable Exception Handler
+end
+Container -> index.php: FrontController
+
+index.php -> FrontController: run()
+FrontController -> Request: validateRequest()
+Request -> RequestData: getMethod()
+RequestData -> Request: GET/POST/PUT/DELETE
+alt Retrieve GET data
+    Request -> DataCollection: get()
+else Retrieve POST data
+    Request -> DataCollection: post()
+else Retrieve PUT data
+    Request -> DataCollection: post()
+else Retrieve DELETE data
+    Request -> DataCollection: get()
+else Others
+    Request -> DataCollection: get()
+end
+
+DataCollection -> Request: data
+Request -> RequestData: getUri()
+RequestData -> Request: uri
+Request -> Router: checkRoute(uri)
+Router -> Router: parseUri(uri)
+
+alt Controller and method exists
+Router -> Router: checkController()
+Router -> Router: checkAction()
+else Controller not found
+Router -> RouterException: Throws an exception
+RouterException -> ExceptionHandler: is captured
+ExceptionHandler -> Response: send()
+Response -> User: HTTP/1.1 XXX [ERROR_MSG]
+end
+
+Router -> Router: setParameters(\ReflectionMethod method)
+loop #method_parameters times
+    Router -> Input: get([method_parameter])
+    Input -> Router: Method parameter value
+end
+
+Router -> Request: Router
+Request -> FrontController: Router
+
+FrontController -> Router: getController()
+FrontController -> Router: getAction()
+FrontController -> Router: getParameters()
+
+FrontController -> Container: get(controller)
+Container -> FrontController: Controller
+
+FrontController -> Controller: call_user_func_array(Controller, action, parameters)
+Controller -> FrontController: responseData
+
+FrontController -> Response: __construct(responseData, 200)
+FrontController -> Response: send()
+
+Response -> User: HTTP/1.1 200 OK
+Response -> User: HTML/JSON/etc
+
+
+@enduml
