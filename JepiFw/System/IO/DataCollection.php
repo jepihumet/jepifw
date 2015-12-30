@@ -10,6 +10,9 @@
 namespace Jepi\Fw\IO;
 
 
+use Jepi\Fw\Storage\Cookies;
+use Jepi\Fw\Storage\Session;
+
 class DataCollection
 {
     /**
@@ -28,12 +31,12 @@ class DataCollection
     private $files;
 
     /**
-     * @var
+     * @var Session
      */
     private $session;
 
     /**
-     * @var
+     * @var Cookies
      */
     private $cookies;
 
