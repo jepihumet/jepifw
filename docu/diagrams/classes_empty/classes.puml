@@ -1,0 +1,141 @@
+@startuml
+skinparam groupInheritance 0
+
+namespace DI {
+    class Container
+    class NotFoundException
+}
+
+namespace Jepi.Fw.Config {
+
+    interface ConfigInterface
+    abstract class ConfigAbstract
+    class Config
+
+    ConfigInterface <|.. ConfigAbstract
+    ConfigAbstract <|-- Config
+
+    ConfigAbstract o-- Jepi.Fw.Exceptions.ConfigException
+}
+namespace Jepi.Fw.Controller {
+
+    interface ControllerInterface
+    class Controller
+
+    ControllerInterface <|.. Controller
+
+    Controller *- Jepi.Fw.Router.RouterInterface
+    Controller *- Jepi.Fw.Storage.Session
+    Controller *- DI.Container
+    Controller *- Jepi.Fw.View.ViewInterface
+}
+
+namespace Jepi.Fw.FrontController {
+    interface FrontControllerInterface
+    class FrontController
+
+    FrontControllerInterface <|.. FrontController
+
+    FrontController o-- DI.NotFoundException
+    FrontController o-- Jepi.Fw.IO.Response
+    FrontController *- Jepi.Fw.Config.ConfigInterface
+    FrontController *- Jepi.Fw.IO.RequestInterface
+    FrontController *- Jepi.Fw.Libraries.FileManager
+    FrontController *- DI.Container
+}
+
+namespace Jepi.Fw.IO {
+
+    class DataCollection
+    interface InputInterface
+    class Input
+    interface RequestInterface
+    class Request
+    class RequestData
+    interface ResponseInterface
+    class Response
+
+    InputInterface <|.. Input
+    Jepi.Fw.Security.XssFilter <|-- Input
+    RequestInterface <|.. Request
+    ResponseInterface <|.. Response
+
+    DataCollection "3" *-right- InputInterface
+    DataCollection *- Jepi.Fw.Storage.Session
+    DataCollection *- Jepi.Fw.Storage.Cookies
+
+    RequestInterface *- Jepi.Fw.Router.RouterInterface
+    
+    Request *- DataCollection
+    Request *- Jepi.Fw.Router.RouterInterface
+    Request *- Jepi.Fw.Config.ConfigInterface
+    Request *-down- RequestData
+    Request o-- Jepi.Fw.Exceptions.IOException
+
+    RequestData *- Jepi.Fw.Config.ConfigInterface
+}
+
+namespace Jepi.Fw.Libraries {
+    class FileManager
+}
+
+namespace Jepi.Fw.Model {
+    class Connections
+    interface ModelInterface
+    class MySqlModel
+
+    ModelInterface <|.. MySqlModel
+    ModelInterface o-- Connections
+    Connections o-- Jepi.Fw.Exceptions.ModelException
+    MySqlModel o-- Jepi.Fw.Exceptions.ModelException
+}
+
+namespace Jepi.Fw.Router {
+    interface RouterInterface
+    class Router
+
+    RouterInterface <|.up. Router
+    RouterInterface *- Jepi.Fw.Config.ConfigInterface
+    RouterInterface *- Jepi.Fw.IO.InputInterface
+    Router o-- Jepi.Fw.Exceptions.RouterException
+}
+
+namespace Jepi.Fw.Security {
+    class XssFilter
+}
+
+namespace Jepi.Fw.Storage {
+    class Cookies
+    class Session
+
+    Jepi.Fw.Security.XssFilter <|-- Cookies
+    Jepi.Fw.Security.XssFilter <|-- Session
+    Cookies o-- Jepi.Fw.Exceptions.StorageException
+    Session o-- Jepi.Fw.Exceptions.StorageException
+}
+
+namespace Jepi.Fw.View {
+    interface ViewInterface 
+    class View
+
+    ViewInterface <|.. View
+}
+
+namespace Jepi.Fw.Exceptions {
+
+    class JepiException
+    class ConfigException
+    class ModelException
+    class RouterException
+    class StorageException
+    class IOException
+    
+    JepiException <|-up- ConfigException
+    JepiException <|-up- ModelException
+    JepiException <|-up- RouterException
+    JepiException <|-up- StorageException
+    JepiException <|-up- IOException
+    JepiException *- Jepi.Fw.IO.Response
+}
+
+@enduml
