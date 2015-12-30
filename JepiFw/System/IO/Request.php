@@ -68,12 +68,12 @@ class Request implements RequestInterface
     /**
      * @param $key
      * @return mixed
-     * @throws Exception
+     * @throws IOException
      */
     public function getHeader($key)
     {
         if (empty($key)) {
-            throw new Exception('An HTTP header name is required');
+            throw new IOException('An HTTP header name is required');
         }
 
         // Try to get it from the $_SERVER array first
