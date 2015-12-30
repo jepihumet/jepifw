@@ -1,0 +1,343 @@
+@startuml
+skinparam groupInheritance 2
+
+namespace DI {
+    class Container
+    class NotFoundException
+}
+
+namespace Jepi.Fw.Config {
+
+    interface ConfigInterface{
+        mixed get(string section, string key)
+        mixed getSection(string section)
+        void set(string section, string key, mixed value)
+    }
+    
+    abstract class ConfigAbstract{
+        array<mixed> config
+        mixed get(string section, string key)
+        mixed getSection(string section)
+        void set(string section, string key, mixed value)
+    }
+
+    class Config{
+        void loadFile(string path)
+        void loadArray(array config)
+        array<mixed> getData()
+    }
+
+    ConfigInterface <|.. ConfigAbstract
+    ConfigAbstract <|-- Config
+
+    ConfigAbstract o-- Jepi.Fw.Exceptions.ConfigException
+}
+namespace Jepi.Fw.Controller {
+
+    interface ControllerInterface{
+        
+    }
+
+    class Controller{
+        Jepi.Fw.Router.RouterInterface router
+        Jepi.Fw.Storage.Session session
+        DI.Container container
+        Jepi.Fw.View.ViewInterface view
+    }
+
+    ControllerInterface <|.. Controller
+
+    Controller *- Jepi.Fw.Router.RouterInterface
+    Controller *- Jepi.Fw.Storage.Session
+    Controller *- DI.Container
+    Controller *- Jepi.Fw.View.ViewInterface
+}
+
+namespace Jepi.Fw.FrontController {
+    interface FrontControllerInterface {
+        void run()
+    }
+
+    class FrontController {
+        Jepi.Fw.Config.ConfigInterface config
+        Jepi.Fw.IO.RequestInterface request
+        Jepi.Fw.Libraries.FileManager fileManager
+        DI.Container container
+
+        void run()
+    }
+
+    FrontControllerInterface <|.. FrontController
+
+    FrontController o-- DI.NotFoundException
+    FrontController o-- Jepi.Fw.IO.Response
+    FrontController *- Jepi.Fw.Config.ConfigInterface
+    FrontController *- Jepi.Fw.IO.RequestInterface
+    FrontController *- Jepi.Fw.Libraries.FileManager
+    FrontController *- DI.Container
+}
+
+namespace Jepi.Fw.IO {
+
+    class DataCollection{
+        InputInterface get
+        InputInterface post
+        InputInterface files
+        Jepi.Fw.Storage.Session session
+        Jepi.Fw.Storage.Cookies cookies
+
+        void setup(mixed unsetValue)
+        InputInterface get()
+        InputInterface post()
+        InputInterface files()
+    }
+
+    interface InputInterface{
+        mixed get(string key, boolean xssPrevent)
+    }
+
+    class Input{
+        array data
+        mixed unsetValue
+
+        void setup(array dataArray, mixed unsetValue)
+        mixed get(string key, xssPrevent)
+    }
+
+    interface RequestInterface {
+        mixed getRequest()
+        mixed getHeader(string key)
+        Jepi.Fw.Router.RouterInterface validateRequest()
+    }
+
+    class Request {
+        DataCollection dataCollection
+        Jepi.Fw.Router.RouterInterface router
+        Jepi.Fw.Config.ConfigInterface config
+        RequestData requestData
+        string method
+        string unsetValue
+
+        RequestData getRequest()
+        mixed getHeader(string key)
+        Jepi.Fw.Router.RouterInterface validateRequest()
+    }
+
+    class RequestData {
+        string getRemoteHost()
+        string getRemoteAddr()
+        string getRemotePort()
+        string getUri()
+        string getMethod()
+        string getTime()
+        float getTimeFload()
+        string getUserAgent()
+        string getScriptFilename()
+        string getQueryString()
+        void __construct(Jepi.Fw.Config.ConfigInterface config)
+    }
+
+    interface ResponseInterface {
+        void __construct(string content, int status, array headers)
+        string send()
+    }
+
+    class Response {
+        string content
+        int statusCode
+        string statusText
+        string version
+        array headers
+        
+        void __construct(string content, int status, array headers)
+        string send()
+    }
+
+    InputInterface <|.. Input
+    Jepi.Fw.Security.XssFilter <|-- Input
+    RequestInterface <|.. Request
+    ResponseInterface <|.. Response
+
+    DataCollection "3" *- InputInterface
+    DataCollection *- Jepi.Fw.Storage.Session
+    DataCollection *- Jepi.Fw.Storage.Cookies
+
+    RequestInterface *- Jepi.Fw.Router.RouterInterface
+    
+    Request *- DataCollection
+    Request *- Jepi.Fw.Router.RouterInterface
+    Request *- Jepi.Fw.Config.ConfigInterface
+    Request *- RequestData
+    Request o-- Jepi.Fw.Exceptions.IOException
+
+    RequestData *- Jepi.Fw.Config.ConfigInterface
+}
+
+namespace Jepi.Fw.Libraries {
+    class FileManager {
+        array<string> expandDirectories(string baseDir)
+        array<string> listAllFilesInDirectory(string baseDir)
+    }
+}
+
+namespace Jepi.Fw.Model {
+    class Connections {
+        stdClass openMySqlConnection(string name)
+        boolean closeConnection(string name)
+        void closeConnections()
+    }
+
+    interface ModelInterface {
+        __construct(Connections connections)
+        array select($query)
+        int insert(string query)
+        int update(string query)
+        int delete(string query)
+        void beginTransaction()
+        void endTransaction()
+        void rollback()
+    }
+
+    class MySqlModel {
+        __construct(Connections connections)
+        array select($query)
+        int insert(string query)
+        int update(string query)
+        int delete(string query)
+        void beginTransaction()
+        void endTransaction()
+        void rollback()
+    }
+
+    ModelInterface <|.. MySqlModel
+    ModelInterface o-- Connections
+    Connections o-- Jepi.Fw.Exceptions.ModelException
+    MySqlModel o-- Jepi.Fw.Exceptions.ModelException
+}
+
+namespace Jepi.Fw.Router {
+    interface RouterInterface {
+        __construct(ConfigInterface config, InputInterface inputData)
+        void checkRoute($uri)
+        string getController()
+        string getAction()
+        string getParameters()
+    }
+
+    class Router {
+        Jepi.Fw.Config.ConfigInterface config
+        Jepi.Fw.IO.InputInterface inputData
+        string controller
+        string action
+        string uriParams
+        array parameters
+
+        __construct(ConfigInterface config, InputInterface inputData)
+        void checkRoute($uri)
+        string getController()
+        string getAction()
+        string getParameters()
+    }
+
+    RouterInterface <|.. Router
+    RouterInterface *- Jepi.Fw.Config.ConfigInterface
+    RouterInterface *- Jepi.Fw.IO.InputInterface
+    Router o-- Jepi.Fw.Exceptions.RouterException
+}
+
+namespace Jepi.Fw.Security {
+    class XssFilter {
+        bool|float|int|string xssPreventFilter(string data)
+    }
+}
+
+namespace Jepi.Fw.Storage {
+    class Cookies {
+        Jepi.Fw.Config.ConfigInterface config
+        array data
+        array configStorage
+        mixed unsetValue
+        int expire
+        string prefix
+        string domain
+        string path
+        boolean secure
+        boolean httpOnly
+
+        __construct(ConfigInterface config, XssFilter xssFilter)
+        mixed getDefaultValue()
+        set(string name, bool|float|int|string value, int expire, string domain, string path, boolean secure, boolean httpOnly)
+        bool|float|int|string get(string name, boolean xssPrevent)
+        void delete(string name)
+        void touch(string name)
+        array getData()
+    }
+
+    class Session {
+        Jepi.Fw.Config.ConfigInterface config
+        string sessionId
+        array configStorage
+        mixed unsetValue
+
+        __construct(ConfigInterface config)
+        mixed getDefaultValue()
+        void startSession()
+        killSession()
+        mixed get(string name)
+        boolean set(string name, mixed value)
+        mixed flass(string name)
+        boolean setFlash(string name, mixed value)
+    }
+
+    Jepi.Fw.Security.XssFilter <|-- Cookies
+    Jepi.Fw.Security.XssFilter <|-- Session
+    Cookies o-- Jepi.Fw.Exceptions.StorageException
+    Session o-- Jepi.Fw.Exceptions.StorageException
+}
+
+namespace Jepi.Fw.View {
+    interface ViewInterface {
+        void addVar(string name, mixed value)
+        string get(string url, array vars)
+    }
+
+    class View {
+        Jepi.Fw.Config.ConfigInterface config
+        Jepi.Fw.Libraries.FileManager fileManager
+        string viewsFirectory
+        array vars
+        string content
+
+        __construct(Jepi.Fw.Config.ConfigInterface config, Jepi.Fw.Libraries.FileManager fileManager)
+        void addVar(string name, mixed value)
+        array getVars()
+        string get(string url, array vars)
+    }
+
+    ViewInterface <|.. View
+}
+
+namespace Jepi.Fw.Exceptions {
+
+    class JepiException{
+        string getProductionMessage()
+        string getDevelopmentMessage()
+        string getExceptionType()
+    }
+    class ConfigException
+    class ModelException
+    class RouterException
+    class StorageException
+    class IOException
+    
+
+    JepiException <|-- ConfigException
+    JepiException <|-- ModelException
+    JepiException <|-- RouterException
+    JepiException <|-- StorageException
+    JepiException <|-- IOException
+
+    JepiException *- Jepi.Fw.IO.Response
+}
+
+@enduml
