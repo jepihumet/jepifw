@@ -1,0 +1,32 @@
+body {
+    padding-top: 50px;
+}
+.content-container{
+    padding: 40px 15px;
+}
+form {
+    display: inline-block;
+}
+.form-group {
+    text-align: center;
+    padding-bottom: 25px;
+}
+#todo {
+    margin: 0 auto;
+    width: 500px;
+}
+a.close {
+    float: right;
+}
+.todos-col{
+    margin: 0 auto;
+    width: 400px;
+}
+.task{
+    cursor: pointer;
+}
+.done-task{
+    text-decoration: line-through;
+}
+.todo-task{
+}
