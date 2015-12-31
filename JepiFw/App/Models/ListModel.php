@@ -11,6 +11,8 @@ namespace App\Models;
  */
 class ListModel extends \Jepi\Fw\Model\MySqlModel {
 
+    protected $dbConnection = 'todo';
+
     public function allLists() {
         $sql = "SELECT id_list, name, description FROM lists";
         return $this->select($sql);

@@ -11,6 +11,8 @@ namespace App\Models;
  */
 class TaskModel extends \Jepi\Fw\Model\MySqlModel {
 
+    protected $dbConnection = 'todo';
+
     public function allTasks() {
         $sql = "SELECT id_task, id_list, name, description, status FROM tasks";
         return $this->select($sql);
