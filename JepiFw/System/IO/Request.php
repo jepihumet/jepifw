@@ -56,6 +56,7 @@ class Request implements RequestInterface
         $this->router = $router;
         $this->requestData = $requestData;
         $this->dataCollection = $dataCollection;
+        $this->dataCollection->setup($this->unsetValue);
     }
 
     /**
@@ -114,8 +115,9 @@ class Request implements RequestInterface
             default:
                 $input = $this->dataCollection->get();
         }
-
+        
         $uri = $this->requestData->getUri();
+        $this->router->setInput($input);
         $this->router->checkRoute($uri);
 
         return $this->router;

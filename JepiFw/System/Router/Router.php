@@ -51,8 +51,15 @@ class Router implements RouterInterface {
      * @param InputInterface $inputData
      * @throws RouterException
      */
-    public function __construct(ConfigInterface $config, InputInterface $inputData) {
+    public function __construct(ConfigInterface $config) {
         $this->config = $config;
+    }
+
+    /**
+     * 
+     * @param InputInterface $inputData
+     */
+    public function setInput(InputInterface $inputData) {
         $this->inputData = $inputData;
     }
 
@@ -60,7 +67,7 @@ class Router implements RouterInterface {
      * @param string $uri
      * @throws RouterException
      */
-    public function checkRoute($uri){
+    public function checkRoute($uri) {
         @list($controller, $action, $params) = $this->parseUri($uri);
 
         $this->controller = $controller;
@@ -75,11 +82,11 @@ class Router implements RouterInterface {
      * @param $uri
      * @return array
      */
-    private function parseUri($uri){
+    private function parseUri($uri) {
         $path = trim(parse_url($uri, PHP_URL_PATH), DIRECTORY_SEPARATOR);
-        if ($path[0] == '/'){
+        if ($path[0] == '/') {
             $cleanPath = substr($path, 1);
-        }else{
+        } else {
             $cleanPath = $path;
         }
         return explode('/', $cleanPath, 3);
@@ -89,10 +96,8 @@ class Router implements RouterInterface {
      * @throws RouterException
      */
     private function checkController() {
-        if (!isset($this->controller) || is_null($this->controller) || ($this->controller
-                == "")) {
-            $this->controller = $this->config->get('Routing',
-                    'DefaultController');
+        if (!isset($this->controller) || is_null($this->controller) || ($this->controller == "")) {
+            $this->controller = $this->config->get('Routing', 'DefaultController');
         }
         $controllersNamespaces = $this->config->get('Namespaces', 'Controllers');
         $this->controller = $controllersNamespaces . '\\' . ucfirst(strtolower($this->controller));
@@ -109,9 +114,19 @@ class Router implements RouterInterface {
         if (!isset($this->action) || is_null($this->action) || ($this->action == "")) {
             $this->action = $this->config->get('Routing', 'DefaultAction');
         }
+
         $reflector = new \ReflectionClass($this->controller);
+        $autoRedirect = $this->config->get('Routing', 'AutoRedirect');
         if (!$reflector->hasMethod($this->action)) {
-            throw new RouterException("The controller action '{$this->action}' has been not defined.");
+            if ($autoRedirect) {
+                $this->action = $this->config->get('Routing', 'DefaultAction');
+                if (!$reflector->hasMethod($this->action)){
+                    header("Location: ". $this->config->get('Routing', 'SiteUrl'));
+                    exit;
+                }
+            } else {
+                throw new RouterException("The controller action '{$this->action}' has been not defined.");
+            }
         }
 
         //Prepare to setup the input parameters
