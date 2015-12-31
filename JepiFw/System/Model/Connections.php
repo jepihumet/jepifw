@@ -9,7 +9,6 @@
 
 namespace Jepi\Fw\Model;
 
-use Jepi\Fw\Config\Config;
 use Jepi\Fw\Config\ConfigInterface;
 use Jepi\Fw\Exceptions\ModelException;
 
