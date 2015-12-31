@@ -21,7 +21,8 @@ class RouterTest extends FwTestBase {
         $input = new Input();
         $input->setup(array('param1' => 1, 'param2' => 2),false);
 
-        self::$object = new Router(self::$frontController->getConfig(), $input);
+        self::$object = new Router(self::$frontController->getConfig());
+        self::$object->setInput($input);
         self::$object->checkRoute('/demo/testmethod');
     }
 
