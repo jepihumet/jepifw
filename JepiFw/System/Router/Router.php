@@ -48,7 +48,6 @@ class Router implements RouterInterface {
 
     /**
      * @param ConfigInterface $config
-     * @param InputInterface $inputData
      * @throws RouterException
      */
     public function __construct(ConfigInterface $config) {
