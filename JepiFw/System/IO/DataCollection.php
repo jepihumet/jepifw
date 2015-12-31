@@ -53,6 +53,7 @@ class DataCollection
         $this->post->setup($_POST, $unsetValue);
         $this->files = new Input();
         $this->files->setup($files, $unsetValue);
+        
     }
 
     /**
@@ -74,5 +75,19 @@ class DataCollection
      */
     public function files(){
         return $this->files;
+    }
+    
+    /**
+     * @return Session
+     */
+    public function session(){
+        return $this->session;
+    }
+    
+    /**
+     * @return Cookies
+     */
+    public function cookies(){
+        return $this->cookies;
     }
 }
