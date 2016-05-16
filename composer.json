@@ -1,12 +1,16 @@
 {
     "name": "jepi/fw",
     "description": "JepiFw is an approach of how to code a PHP framework focused on abstraction and usefullness. This is the bachelor's final project of Jepi Humet Alsius.",
+    "license": "MIT License",
     "authors": [
         {
-            "name": "Jepi Humet Alsius",
-            "email": "jepihumet@gmail.com"
+            "name": "Jepi Humet",
+            "email": "jepihumet@gmail.com",
+            "homepage": "http://jepihumet.com",
+            "role": "Developer"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "php-di/php-di": "*",
         "doctrine/annotations": "~1.2",
