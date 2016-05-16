@@ -1,6 +1,6 @@
 {
-    "name": "jpi/jpifw",
-    "description": "Description of project JepiFw.",
+    "name": "jepi/fw",
+    "description": "JepiFw is an approach of how to code a PHP framework focused on abstraction and usefullness. This is the bachelor's final project of Jepi Humet Alsius.",
     "authors": [
         {
             "name": "Jepi Humet Alsius",
