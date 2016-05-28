@@ -1,0 +1,99 @@
+@startuml
+
+namespace Jepi.Fw.IO {
+
+    class DataCollection{
+        InputInterface get
+        InputInterface post
+        InputInterface files
+        Jepi.Fw.Storage.Session session
+        Jepi.Fw.Storage.Cookies cookies
+
+        void setup(mixed unsetValue)
+        InputInterface get()
+        InputInterface post()
+        InputInterface files()
+    }
+
+    interface InputInterface{
+        mixed get(string key, boolean xssPrevent)
+    }
+
+    class Input{
+        array data
+        mixed unsetValue
+
+        void setup(array dataArray, mixed unsetValue)
+        mixed get(string key, xssPrevent)
+    }
+
+    interface RequestInterface {
+        mixed getRequest()
+        mixed getHeader(string key)
+        Jepi.Fw.Router.RouterInterface validateRequest()
+    }
+
+    class Request {
+        DataCollection dataCollection
+        Jepi.Fw.Router.RouterInterface router
+        Jepi.Fw.Config.ConfigInterface config
+        RequestData requestData
+        string method
+        string unsetValue
+
+        RequestData getRequest()
+        mixed getHeader(string key)
+        Jepi.Fw.Router.RouterInterface validateRequest()
+    }
+
+    class RequestData {
+        string getRemoteHost()
+        string getRemoteAddr()
+        string getRemotePort()
+        string getUri()
+        string getMethod()
+        string getTime()
+        float getTimeFload()
+        string getUserAgent()
+        string getScriptFilename()
+        string getQueryString()
+        void __construct(Jepi.Fw.Config.ConfigInterface config)
+    }
+
+    interface ResponseInterface {
+        void __construct(string content, int status, array headers)
+        string send()
+    }
+
+    class Response {
+        string content
+        int statusCode
+        string statusText
+        string version
+        array headers
+        
+        void __construct(string content, int status, array headers)
+        string send()
+    }
+
+    InputInterface <|.up. Input
+    Jepi.Fw.Security.XssFilter <|-down- Input
+    RequestInterface <|.. Request
+    ResponseInterface <|.. Response
+
+    DataCollection "3" *- InputInterface
+    DataCollection *-down- Jepi.Fw.Storage.Session
+    DataCollection *-down- Jepi.Fw.Storage.Cookies
+
+    RequestInterface *-down- Jepi.Fw.Router.RouterInterface
+    
+    Request *-up- DataCollection
+    Request *-down- Jepi.Fw.Router.RouterInterface
+    Request *-down- Jepi.Fw.Config.ConfigInterface
+    Request *- RequestData
+    Request o-down- Jepi.Fw.Exceptions.IOException
+
+    RequestData *-left- Jepi.Fw.Config.ConfigInterface
+}
+
+@enduml

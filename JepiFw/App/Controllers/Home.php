@@ -25,6 +25,9 @@ class Home extends \Jepi\Fw\Controller\Controller
     public function index(){
         return "Hello World";
     }
+    public function phpinfo(){
+        phpinfo();
+    }
 
     public function welcome(){
         $this->view->addVar('title', 'JepiFW Template');

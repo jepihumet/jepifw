@@ -64,6 +64,7 @@ namespace Jepi.Fw.FrontController {
         Jepi.Fw.Libraries.FileManager fileManager
         DI.Container container
 
+        __construct(ConfigInterface config, RequestInterface request, Container container, FileManager fileManager)
         void run()
     }
 

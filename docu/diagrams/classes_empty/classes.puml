@@ -26,8 +26,9 @@ namespace Jepi.Fw.Controller {
 
     Controller *- Jepi.Fw.Router.RouterInterface
     Controller *- Jepi.Fw.Storage.Session
-    Controller *- DI.Container
+    Controller *-up- DI.Container
     Controller *- Jepi.Fw.View.ViewInterface
+    Controller o-- Jepi.Fw.Model.ModelInterface
 }
 
 namespace Jepi.Fw.FrontController {
@@ -40,7 +41,7 @@ namespace Jepi.Fw.FrontController {
     FrontController o-- Jepi.Fw.IO.Response
     FrontController *- Jepi.Fw.Config.ConfigInterface
     FrontController *- Jepi.Fw.IO.RequestInterface
-    FrontController *- Jepi.Fw.Libraries.FileManager
+    FrontController *-right- Jepi.Fw.Libraries.FileManager
     FrontController *- DI.Container
 }
 
@@ -56,7 +57,7 @@ namespace Jepi.Fw.IO {
     class Response
 
     InputInterface <|.. Input
-    Jepi.Fw.Security.XssFilter <|-- Input
+    Jepi.Fw.Security.XssFilter <|-up- Input
     RequestInterface <|.. Request
     ResponseInterface <|.. Response
 
@@ -67,7 +68,7 @@ namespace Jepi.Fw.IO {
     RequestInterface *- Jepi.Fw.Router.RouterInterface
     
     Request *- DataCollection
-    Request *- Jepi.Fw.Router.RouterInterface
+    Request *-left- Jepi.Fw.Router.RouterInterface
     Request *- Jepi.Fw.Config.ConfigInterface
     Request *-down- RequestData
     Request o-- Jepi.Fw.Exceptions.IOException
@@ -86,6 +87,7 @@ namespace Jepi.Fw.Model {
 
     ModelInterface <|.. MySqlModel
     ModelInterface o-- Connections
+    Connections *- Jepi.Fw.Config.ConfigInterface
     Connections o-- Jepi.Fw.Exceptions.ModelException
     MySqlModel o-- Jepi.Fw.Exceptions.ModelException
 }
@@ -96,7 +98,7 @@ namespace Jepi.Fw.Router {
 
     RouterInterface <|.up. Router
     RouterInterface *- Jepi.Fw.Config.ConfigInterface
-    RouterInterface *- Jepi.Fw.IO.InputInterface
+    RouterInterface *-down- Jepi.Fw.IO.InputInterface
     Router o-- Jepi.Fw.Exceptions.RouterException
 }
 
