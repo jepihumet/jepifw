@@ -27,7 +27,7 @@ class MySqlModelTest extends FwTestBase {
     }
 
     /**
-     * @covers Jepi\Fw\Model\MySqlModelAbstract::select
+     * @covers Jepi\Fw\Model\MySqlModel::select
      */
     public function testSelect() {
         $data = $this->object->listUsers();
@@ -35,7 +35,7 @@ class MySqlModelTest extends FwTestBase {
     }
 
     /**
-     * @covers Jepi\Fw\Model\MySqlModelAbstract::insert
+     * @covers Jepi\Fw\Model\MySqlModel::insert
      * @depends testSelect
      */
     public function testInsert() {
@@ -49,7 +49,7 @@ class MySqlModelTest extends FwTestBase {
     }
 
     /**
-     * @covers Jepi\Fw\Model\MySqlModelAbstract::update
+     * @covers Jepi\Fw\Model\MySqlModel::update
      * @depends testInsert
      * @param $createdId
      */
@@ -64,7 +64,7 @@ class MySqlModelTest extends FwTestBase {
     }
 
     /**
-     * @covers Jepi\Fw\Model\MySqlModelAbstract::delete
+     * @covers Jepi\Fw\Model\MySqlModel::delete
      * @depends testUpdate
      * @param $createdId
      */

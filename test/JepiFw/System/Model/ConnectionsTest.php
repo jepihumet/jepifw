@@ -26,7 +26,7 @@ class ConnectionsTest extends FwTestBase {
     }
 
     /**
-     * @covers Jepi\Fw\System\Model\ConnectionsManager::openMySqlConnection
+     * @covers Jepi\Fw\Model\Connections::openMySqlConnection
      */
     public function testOpenMySqlConnection() {
         try {
@@ -39,7 +39,7 @@ class ConnectionsTest extends FwTestBase {
 
     /**
      * @depends testOpenMySqlConnection
-     * @covers Jepi\Fw\System\Model\ConnectionsManager::closeConnection
+     * @covers Jepi\Fw\Model\Connections::closeConnection
      */
     public function testCloseConnection() {
         try {

@@ -76,7 +76,7 @@ class InputTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers Jepi\Fw\IO\Input::post
+     * @covers Jepi\Fw\IO\Input::get
      */
     public function testPost() {
         $prop1 = $this->postInput->get('attr1');
