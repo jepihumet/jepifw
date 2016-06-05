@@ -1,0 +1,52 @@
+@startuml
+
+actor User
+
+entity Controller
+entity Model
+entity View
+entity MySqlModel
+entity Connections
+entity Config
+entity PDO
+database DB
+
+autonumber
+
+User -> Controller: demana
+Controller -> Model: __construct()
+Model -> MySqlModel: parent::__construct()
+group Instanciar model
+MySqlModel -> Connections: openMySqlConnection()
+Connections -> Config: get('Database', 'host')
+Connections -> Config: get('Database', 'port')
+Connections -> Config: get('Database', 'user')
+Connections -> Config: get('Database', 'pass')
+Connections -> Config: get('Database', 'name')
+Connections -> PDO: __construct(credentials)
+PDO -> DB: connecta
+end
+
+Controller -> Model: gestiona dades
+
+group Interacció amb base de dades
+    alt Crea
+        Model -> MySqlModel: insert(query)
+    else Llegeix
+        Model -> MySqlModel: select(query)
+    else Actualitza 
+        Model -> MySqlModel: update(query)
+    else Elimina
+        Model -> MySqlModel: delete(query)
+    end
+    MySqlModel -> DB: processa query
+    DB -> Model: retorna dades
+end
+Model -> Controller: retorna dades
+
+Controller -> View: addVar(dades)
+Controller -> View: get(templatePath)
+View -> Controller: retorna vista amb dades
+Controller -> User: mostra vista
+
+@enduml
