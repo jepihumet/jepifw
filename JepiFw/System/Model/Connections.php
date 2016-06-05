@@ -39,9 +39,11 @@ class Connections
 
     public function openMySqlConnection($name = null) {
         $defaultConnection = $this->config->get('Database', 'defaultConnection');
+        //If $name doesn't exists, get the default database from config.ini
         if (is_null($name)){
             $name = $defaultConnection;
         }
+        //If connection already exists, return it
         foreach ($this->connections as $connection) {
             if($connection->name == $name && !is_null($connection->link)) {
                 return $connection->link;
@@ -61,10 +63,11 @@ class Connections
                 array(\PDO::MYSQL_ATTR_FOUND_ROWS => true, \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8" ));
             $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
+            //Add connection link to connections array
             $this->connections[] = (object)array('name'=>$name,'link'=>$connection);
 
             return $connection;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new ModelException("Error trying to connect to database [$name]");
         }
     }
