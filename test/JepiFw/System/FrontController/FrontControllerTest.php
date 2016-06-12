@@ -42,6 +42,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase {
     /**
      * @covers Jepi\Fw\FrontController\FrontController::run
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testRun() {
         ob_start();
