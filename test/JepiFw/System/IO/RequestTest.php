@@ -66,8 +66,9 @@ class RequestTest extends FwTestBase {
      */
     public function testValidateRequest(){
         try{
-            $validated = self::$object->validateRequest();
+            $router = self::$object->validateRequest();
             $this->assertTrue(true);
+            $this->assertEquals("Jepi\\Fw\\Router\\Router", get_class($router));
         }catch(Exception $e){
             $this->assertTrue(false);
         }
