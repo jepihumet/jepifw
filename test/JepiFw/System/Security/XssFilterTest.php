@@ -33,7 +33,6 @@ class XssFilterTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers Jepi\Fw\Security\XssFilter::xssPreventFilter
-     * @todo   Implement testXssPreventFilter().
      */
     public function testXssPreventFilter() {
         $filtered = $this->object->xssPreventFilter($this->xssInjection);
